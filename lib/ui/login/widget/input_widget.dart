@@ -14,19 +14,24 @@ class SberTextField extends StatefulWidget {
 }
 
 class _SearchFieldWidget extends State<SberTextField> {
-  bool _showPassword = false;
+  bool _isObscure = false;
 
   final _textStyle = TextStyle(color: Color(0xBF000000), fontSize: 14.0);
   final _placeHolderStyle = TextStyle(color: Color(0x40060607), fontSize: 14.0);
   final _border = OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent), borderRadius: BorderRadius.circular(4.0), gapPadding: 0.0);
 
-  //BoxDecoration(borderRadius: BorderRadius.circular(4.0), color: Color(0x75E9E9E9)), width: 300.0, height: 40.0)
+  @override
+  void initState() {
+    super.initState();
+    _isObscure = widget.isPassword;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PlatformTextField(
       keyboardType: TextInputType.text,
       autocorrect: false,
-      obscureText: widget.isPassword,
+      obscureText: _isObscure,
       onChanged: widget.onChanged,
       style: _textStyle,
       cupertino: (_, __) => CupertinoTextFieldData(
@@ -43,13 +48,13 @@ class _SearchFieldWidget extends State<SberTextField> {
           focusedBorder: _border,
           suffixIcon: widget.isPassword ? IconButton(
             icon: Icon(
-                widget.isPassword
+                _isObscure
                     ? Icons.visibility
                     : Icons.visibility_off,
-                color: Colors.white),
+                color: Color(0xFFdD2D2D2)),
             onPressed: () {
               setState(() {
-                this._showPassword = !this._showPassword;
+                this._isObscure = !this._isObscure;
               });
             },
           ): null
