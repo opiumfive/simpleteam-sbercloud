@@ -9,6 +9,8 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sbercloud_flutter/ui/login/widget/button_widget.dart';
+import 'package:sbercloud_flutter/ui/login/widget/input_widget.dart';
 
 import '../../const.dart';
 import '../toast_utils.dart';
@@ -72,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Color.fromARGB(255, 21, 50, 67),
+      backgroundColor: Colors.white,
       body: Container(
           padding: EdgeInsets.all(16.0),
           child: Form(
@@ -81,89 +83,18 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FlatButton(
-                      onPressed: () => _switchPlatform(context),
-                      child:
-                          Icon(Icons.phone)),
-                  PlatformTextField(
-                    keyboardType: TextInputType.text,
-                    autocorrect: false,
-                    obscureText: false,
-                    onChanged: (value) => _login = value,
-                    style: TextStyle(color: Colors.white),
-                    cupertino: (_, __) => CupertinoTextFieldData(
-                        style: TextStyle(color: Colors.black),
-                        placeholder: 'Логин'),
-                    material: (_, __) => MaterialTextFieldData(
-                      decoration: InputDecoration(
-                        labelText: 'Логин',
-                        labelStyle: TextStyle(color: Colors.white),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      ),
-                    ),
+                  GestureDetector(child: Text('Account Login', style: TextStyle(color: Color(0xCC000000), fontSize: 23.0, fontWeight: FontWeight.bold)),
+                    onTap: () => _switchPlatform(context),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                  ),
-                  PlatformTextField(
-                    keyboardType: TextInputType.text,
-                    autocorrect: false,
-                    obscureText: !this._showPassword,
-                    style: TextStyle(color: Colors.white),
-                    onChanged: (value) => _password = value,
-                    cupertino: (_, __) => CupertinoTextFieldData(
-                      style: TextStyle(color: Colors.black),
-                      placeholder: 'Пароль',
-                    ),
-                    material: (_, __) => MaterialTextFieldData(
-                        decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            labelStyle: TextStyle(color: Colors.white),
-                            labelText: 'Пароль',
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                  this._showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.white),
-                              onPressed: () {
-                                setState(() {
-                                  this._showPassword = !this._showPassword;
-                                });
-                              },
-                            ))),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 32.0),
-                  ),
+                  SizedBox(height: 18.0),
+                  SberTextField(onChanged: (value) => _login = value, placeholder: "Логин",),
+                  SizedBox(height: 12.0),
+                  SberTextField(onChanged: (password) => _password = password, placeholder: "Пароль", isPassword: true),
+                  SizedBox(height: 32.0),
                   auth.loggedInStatus == Status.Authenticating ?  PlatformCircularProgressIndicator() :
-                  PlatformButton(
-                    child: PlatformText('Войти'),
-                    onPressed: doLogin,
-                    material: (_, __) => MaterialRaisedButtonData(
-                        child: Container(
-                          width: double.infinity,
-                          height: 40.0,
-                          child: Center(child: PlatformText('Войти')),
-                        ),
-                        textColor: Color.fromARGB(255, 21, 50, 67),
-                        color: Color.fromARGB(255, 187, 215, 0)),
-                    cupertino: (_, __) => CupertinoButtonData(
-                        child: PlatformText(
-                      'Войти',
-                      style: TextStyle(color: Colors.white),
-                    )),
-                  ),
+                  SberButton(text: "Войти", onPressed: doLogin),
+                  SizedBox(height: 12.0),
+                  SberButton(text: "Регистрация", onPressed: doLogin, style: SberButtonStyle.Bordered),
                 ],
               ),
             ),
