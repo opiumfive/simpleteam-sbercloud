@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'file:///C:/Users/opiumfive/StudioProjects/sbercloud_flutter/lib/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
+import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/ext.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
 import 'package:sbercloud_flutter/models/auth_models.dart';

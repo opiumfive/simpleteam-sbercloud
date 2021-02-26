@@ -1,10 +1,10 @@
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/application_operations_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/application_performance_usecase.dart';
+import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_trace_usecase.dart';
 import 'package:sbercloud_flutter/const.dart';
-import 'file:///C:/Users/opiumfive/StudioProjects/sbercloud_flutter/lib/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
