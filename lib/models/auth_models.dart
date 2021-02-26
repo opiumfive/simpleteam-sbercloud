@@ -23,6 +23,23 @@ class User {
 }
 
 @JsonSerializable()
+class UserProject {
+  String id;
+  String name;
+  Domain domain;
+
+  UserProject({this.id, this.name, this.domain});
+
+  factory UserProject.fromJson(Map<String, dynamic> json) => _$UserProjectFromJson(json);
+  Map<String, dynamic> toJson() => _$UserProjectToJson(this);
+
+  @override
+  String toString() {
+    return 'UserProject{id: $id, name: $name}';
+  }
+}
+
+@JsonSerializable()
 class LoginResponse {
   // ignore: non_constant_identifier_names
   Token token;
@@ -45,9 +62,10 @@ class Token {
   String expires_at;
   //List<Catalog> catalog;
   User user;
+  UserProject project;
 
   // ignore: non_constant_identifier_names
-  Token({this.expires_at, this.user});
+  Token({this.expires_at, this.user, this.project});
 
   factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
   Map<String, dynamic> toJson() => _$TokenToJson(this);
@@ -148,6 +166,8 @@ class UserCreds {
 @JsonSerializable()
 class Domain {
   String name = DOMAIN_NAME;
+  @JsonKey(includeIfNull: false)
+  String id;
 
   Domain();
 

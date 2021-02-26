@@ -29,7 +29,7 @@ class AuthApiUsecase with ChangeNotifier {
     restClient = new RestClient(dio, baseUrl: API_BASE_IAM);
   }
 
-  Future<BaseModel<User>> login(String login, String password) async {
+  Future<BaseModel<Token>> login(String login, String password) async {
     _loggedInStatus = Status.Authenticating;
     notifyListeners();
 
@@ -57,6 +57,7 @@ class AuthApiUsecase with ChangeNotifier {
 
         UserPreferences userPreferences = UserPreferences();
         userPreferences.saveUser(response.token.user);
+        userPreferences.saveProject(response.token.project);
         userPreferences.saveToken(token);
         _loggedInStatus = Status.LoggedIn;
         notifyListeners();
@@ -64,7 +65,7 @@ class AuthApiUsecase with ChangeNotifier {
         _loggedInStatus = Status.NotLoggedIn;
         notifyListeners();
       }
-      return BaseModel()..data = response.token.user;
+      return BaseModel()..data = response.token;
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
       _loggedInStatus = Status.NotLoggedIn;

@@ -41,8 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final form = formKey.currentState;
 
-      //Navigator.pushReplacementNamed(context, MAIN_ROUTE);
-
       if (form.validate()) {
         form.save();
         
@@ -54,16 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
           return;
         }
 
-        final Future<BaseModel<User>> user = auth.login(login, _password);
+        final Future<BaseModel<Token>> user = auth.login(login, _password);
         user.then((baseModelUser)  {
-          User user = baseModelUser.data;
-          if (user == null) {
+          Token loginData = baseModelUser.data;
+          if (loginData == null) {
             final String error = baseModelUser.error.getErrorMessage();
             ToastUtils.showCustomToast(context, "Ошибка входа: $error");
             print(error);
 
           } else {
-            Provider.of<UserProvider>(context, listen: false).setUser(user);
+            Provider.of<UserProvider>(context, listen: false).setUser(loginData.user);
             Navigator.pushReplacementNamed(context, MAIN_ROUTE);
           }
         });

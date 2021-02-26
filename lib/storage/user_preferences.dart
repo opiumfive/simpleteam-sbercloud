@@ -22,11 +22,30 @@ class UserPreferences {
     return User(id: userId, name: visibleName);
   }
 
+  Future<bool> saveProject(UserProject project) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setString("p_id", project.id);
+    prefs.setString("p_name", project.name);
+
+    return prefs.commit();
+  }
+  Future<UserProject> getProject() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String id = prefs.getString("p_id");
+    String name = prefs.getString("p_name");
+
+    return UserProject(id: id, name: name);
+  }
+
   void removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("id");
     prefs.remove("name");
     prefs.remove("token");
+    prefs.remove("p_id");
+    prefs.remove("p_name");
   }
 
   Future<bool> saveToken(String token) async {

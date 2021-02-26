@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
+import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
 import 'package:sbercloud_flutter/ext.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
 import 'package:sbercloud_flutter/models/auth_models.dart';
+import 'package:sbercloud_flutter/models/cloud_eye_models.dart';
 import 'package:sbercloud_flutter/storage/user_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +115,60 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Widget _mainWidget() {
     // test widget
+    CloudEyeUsecase cloudEyeUsecase = Provider.of<CloudEyeUsecase>(context, listen: false);
+    MainProvider mainProvider = Provider.of<MainProvider>(context, listen: false);
+    Future<List<Datapoint>> datapoints() async {
+      BaseModel<List<Metric>> metrics = await cloudEyeUsecase.metrics();
+      if (metrics != null && metrics.data != null) {
+        mainProvider.setMetrics(metrics.data);
+
+        Metric metric = metrics.data[2];
+        BaseModel<List<Datapoint>> data = await cloudEyeUsecase.metricData(
+            metric,
+            DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now()), 3600, filter: "average"
+        );
+        return data.data;
+      }
+    }
+
+    return FutureBuilder(
+        future: datapoints(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.3,
+                child: Center(
+                  child: PlatformCircularProgressIndicator(),
+                ),
+              );
+            default:
+              if (snapshot.hasError || snapshot.data == null) return Text('fail');
+              final List<ChartSampleData> chartData = snapshot.data
+                  .map<ChartSampleData>((e) => ChartSampleData(x: DateTime.fromMillisecondsSinceEpoch((e as Datapoint).timestamp), yValue: (e as Datapoint).getData())).toList();
+              
+              return Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Card(
+                          child: ChartView(chartData: chartData),
+                          shadowColor: Color(0xFF234395).withOpacity(0.2),
+                          elevation: 15,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+
+                        ChartView(chartData: chartData).addNeumorphism(
+                          topShadowColor: Colors.white,
+                          bottomShadowColor: Color(0xFF234395).withOpacity(0.2),
+                        )
+                      ])
+              );
+          }
+        });
 
     final List<ChartSampleData> chartData = <ChartSampleData>[
       ChartSampleData(x: DateTime(2015, 1, 1), yValue: 1.13),
@@ -164,26 +220,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       ChartSampleData(x: DateTime(2018, 11, 1), yValue: 1.14),
       ChartSampleData(x: DateTime(2018, 12, 1), yValue: 1.15)
     ];
-
-    return Center(
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Card(
-            child: ChartView(chartData: chartData),
-            shadowColor: Color(0xFF234395).withOpacity(0.2),
-            elevation: 15,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-          ),
-
-          ChartView(chartData: chartData).addNeumorphism(
-            topShadowColor: Colors.white,
-            bottomShadowColor: Color(0xFF234395).withOpacity(0.2),
-          )
-        ])
-    );
+    
+    
   }
 }
 

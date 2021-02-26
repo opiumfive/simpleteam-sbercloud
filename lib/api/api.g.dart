@@ -34,4 +34,63 @@ class _RestClient implements RestClient {
     final value = LoginResponse.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<void> projects(token) async {
+    ArgumentError.checkNotNull(token, 'token');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    await _dio.request<void>('/v3/projects',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'X-Auth-Token': token},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    return null;
+  }
+
+  @override
+  Future<MetricsResponse> eyeMetrics(token, project_id) async {
+    ArgumentError.checkNotNull(token, 'token');
+    ArgumentError.checkNotNull(project_id, 'project_id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/V1.0/$project_id/metrics',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'X-Auth-Token': token},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MetricsResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<MetricDataResponse> eyeMetricData(token, project_id, queries) async {
+    ArgumentError.checkNotNull(token, 'token');
+    ArgumentError.checkNotNull(project_id, 'project_id');
+    ArgumentError.checkNotNull(queries, 'queries');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queries ?? <String, dynamic>{});
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/V1.0/$project_id/metric-data',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'X-Auth-Token': token},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MetricDataResponse.fromJson(_result.data);
+    return value;
+  }
 }

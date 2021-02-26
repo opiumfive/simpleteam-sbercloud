@@ -1,6 +1,7 @@
 import 'package:sbercloud_flutter/models/auth_models.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+import 'package:sbercloud_flutter/models/cloud_eye_models.dart';
 
 import '../const.dart';
 
@@ -21,6 +22,37 @@ abstract class RestClient {
   @POST("/v3/auth/tokens")
   Future<LoginResponse> login(@Body() LoginRequest loginRequest);
 
-  //@GET("/auth")
-  //Future<User> user(@Header("X-Access-Token") String token);
+  @GET("/v3/projects")
+  Future<void> projects(@Header("X-Auth-Token") String token);
+  /* Output example
+  {
+    "projects": [
+        {
+            "domain_id": "65382450e8f64ac0870cd180d14e684b",
+            "is_domain": false,
+            "parent_id": "65382450e8f64ac0870cd180d14e684b",
+            "name": "project_name",
+            "description": "",
+            "links": {
+                "next": null,
+                "previous": null,
+                "self": "https://www.example.com/v3/projects/a4a5d4098fb4474fa22cd05f897d6b99"
+            },
+            "id": "a4a5d4098fb4474fa22cd05f897d6b99",
+            "enabled": true
+        }
+    ],
+    "links": {
+        "next": null,
+        "previous": null,
+        "self": "https://www.example.com/v3/projects"
+    }
+}
+   */
+
+  @GET("/V1.0/{project_id}/metrics")
+  Future<MetricsResponse> eyeMetrics(@Header("X-Auth-Token") String token, @Path() String project_id);
+
+  @GET("/V1.0/{project_id}/metric-data")
+  Future<MetricDataResponse> eyeMetricData(@Header("X-Auth-Token") String token, @Path() String project_id, @Queries() Map<String, dynamic> queries);
 }

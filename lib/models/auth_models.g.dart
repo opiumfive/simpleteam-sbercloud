@@ -18,6 +18,23 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'name': instance.name,
     };
 
+UserProject _$UserProjectFromJson(Map<String, dynamic> json) {
+  return UserProject(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    domain: json['domain'] == null
+        ? null
+        : Domain.fromJson(json['domain'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$UserProjectToJson(UserProject instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'domain': instance.domain,
+    };
+
 LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
   return LoginResponse(
     token: json['token'] == null
@@ -37,12 +54,16 @@ Token _$TokenFromJson(Map<String, dynamic> json) {
     user: json['user'] == null
         ? null
         : User.fromJson(json['user'] as Map<String, dynamic>),
+    project: json['project'] == null
+        ? null
+        : UserProject.fromJson(json['project'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$TokenToJson(Token instance) => <String, dynamic>{
       'expires_at': instance.expires_at,
       'user': instance.user,
+      'project': instance.project,
     };
 
 LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
@@ -112,12 +133,25 @@ Map<String, dynamic> _$UserCredsToJson(UserCreds instance) => <String, dynamic>{
     };
 
 Domain _$DomainFromJson(Map<String, dynamic> json) {
-  return Domain()..name = json['name'] as String;
+  return Domain()
+    ..name = json['name'] as String
+    ..id = json['id'] as String;
 }
 
-Map<String, dynamic> _$DomainToJson(Domain instance) => <String, dynamic>{
-      'name': instance.name,
-    };
+Map<String, dynamic> _$DomainToJson(Domain instance) {
+  final val = <String, dynamic>{
+    'name': instance.name,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  return val;
+}
 
 Scope _$ScopeFromJson(Map<String, dynamic> json) {
   return Scope()
