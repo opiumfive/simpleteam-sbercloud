@@ -1,4 +1,4 @@
-import 'package:sbercloud_flutter/models/models.dart';
+import 'package:sbercloud_flutter/models/auth_models.dart';
 import 'package:flutter/foundation.dart';
 
 class UserProvider with ChangeNotifier {

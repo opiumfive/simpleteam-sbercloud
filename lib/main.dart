@@ -1,6 +1,10 @@
 import 'package:sbercloud_flutter/api/providers.dart';
+import 'package:sbercloud_flutter/api/usecase/application_operations_usecase.dart';
+import 'package:sbercloud_flutter/api/usecase/application_performance_usecase.dart';
+import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
+import 'package:sbercloud_flutter/api/usecase/cloud_trace_usecase.dart';
 import 'package:sbercloud_flutter/const.dart';
-import 'package:sbercloud_flutter/api/api_usecase.dart';
+import 'file:///C:/Users/opiumfive/StudioProjects/sbercloud_flutter/lib/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +17,7 @@ import 'package:intl/intl.dart';
 import 'api/providers.dart';
 import 'const.dart';
 import 'ext.dart';
-import 'models/models.dart';
+import 'models/auth_models.dart';
 import 'storage/user_preferences.dart';
 import 'ui/login/login_screen.dart';
 import 'ui/main/main_screen.dart';
@@ -66,6 +70,7 @@ class _AppState extends State<App> {
 
     Future<User> getUserDataAndInit() async {
       Intl.defaultLocale = await findSystemLocale();
+      // операции при загрузке приложения, здесь можно добавить валидацию токена и если он протух отправлять на перелогин
       await initializeDateFormatting();
       return UserPreferences().getUser();
     }
@@ -73,7 +78,11 @@ class _AppState extends State<App> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ApiUsecase()),
+        ChangeNotifierProvider(create: (_) => AuthApiUsecase()),
+        ChangeNotifierProvider(create: (_) => ApplicationOperationsUsecase()),
+        ChangeNotifierProvider(create: (_) => ApplicationPerformanceUsecase()),
+        ChangeNotifierProvider(create: (_) => CloudEyeUsecase()),
+        ChangeNotifierProvider(create: (_) => CloudTraceUsecase()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => MainProvider()),
       ],
@@ -115,7 +124,7 @@ class _AppState extends State<App> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
                       case ConnectionState.waiting:
-                        return CircularProgressIndicator();
+                        return PlatformCircularProgressIndicator();
                       default:
                         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
                         else if (snapshot.data == null) return LoginScreen();
@@ -127,7 +136,6 @@ class _AppState extends State<App> {
               routes: {
                 LOGIN_ROUTE: (BuildContext context) => LoginScreen(),
                 MAIN_ROUTE: (BuildContext context) => MainScreen(),
-                PROFILE_ROUTE: (BuildContext context) => ProfileScreen(),
               }),
         ),
       ),

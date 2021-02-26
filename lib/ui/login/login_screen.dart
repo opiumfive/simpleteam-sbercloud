@@ -1,7 +1,7 @@
-import 'package:sbercloud_flutter/api/api_usecase.dart';
+import 'file:///C:/Users/opiumfive/StudioProjects/sbercloud_flutter/lib/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
-import 'package:sbercloud_flutter/models/models.dart';
+import 'package:sbercloud_flutter/models/auth_models.dart';
 import 'package:sbercloud_flutter/storage/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,18 +36,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ApiUsecase auth = Provider.of<ApiUsecase>(context);
+    AuthApiUsecase auth = Provider.of<AuthApiUsecase>(context);
     var doLogin = () {
 
       final form = formKey.currentState;
 
+      //Navigator.pushReplacementNamed(context, MAIN_ROUTE);
+
       if (form.validate()) {
         form.save();
         
-        String login = _login == null ? "" : _login.replaceAll(new RegExp(r'[^\d+]+'), '');
+        String login = _login == null ? "" : _login;
         String password = _password == null ? "" : _password;
 
-        if (login.length < 10 || password.length <= 4) {
+        if (login.length <= 4 || password.length <= 4) {
           ToastUtils.showCustomToast(context, "Ошибка данных");
           return;
         }
@@ -84,8 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child:
                           Icon(Icons.phone)),
                   PlatformTextField(
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [PhoneInputFormatter()],
+                    keyboardType: TextInputType.text,
                     autocorrect: false,
                     obscureText: false,
                     onChanged: (value) => _login = value,

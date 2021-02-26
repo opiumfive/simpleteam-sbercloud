@@ -9,7 +9,7 @@ part of 'api.dart';
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'https://some.some.ru/idealApi/';
+    baseUrl ??= 'https://some.some.ru';
   }
 
   final Dio _dio;
@@ -23,7 +23,7 @@ class _RestClient implements RestClient {
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(loginRequest?.toJson() ?? <String, dynamic>{});
-    final _result = await _dio.request<Map<String, dynamic>>('/auth',
+    final _result = await _dio.request<Map<String, dynamic>>('/v3/auth/tokens',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -32,24 +32,6 @@ class _RestClient implements RestClient {
             baseUrl: baseUrl),
         data: _data);
     final value = LoginResponse.fromJson(_result.data);
-    return value;
-  }
-
-  @override
-  Future<User> user(token) async {
-    ArgumentError.checkNotNull(token, 'token');
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>('/auth',
-        queryParameters: queryParameters,
-        options: RequestOptions(
-            method: 'GET',
-            headers: <String, dynamic>{r'X-Access-Token': token},
-            extra: _extra,
-            baseUrl: baseUrl),
-        data: _data);
-    final value = User.fromJson(_result.data);
     return value;
   }
 }

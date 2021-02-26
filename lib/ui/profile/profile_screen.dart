@@ -1,7 +1,7 @@
-import 'package:sbercloud_flutter/api/api_usecase.dart';
+import 'file:///C:/Users/opiumfive/StudioProjects/sbercloud_flutter/lib/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
-import 'package:sbercloud_flutter/models/models.dart';
+import 'package:sbercloud_flutter/models/auth_models.dart';
 import 'package:sbercloud_flutter/storage/user_preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -26,12 +26,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
 
     User user = Provider.of<UserProvider>(context, listen: false).user;
-    ApiUsecase api = Provider.of<ApiUsecase>(context);
+    AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
 
     return Text('');
   }
 
-  showLogoutDialog(BuildContext context, ApiUsecase api) {
+  showLogoutDialog(BuildContext context, AuthApiUsecase api) {
     // set up the buttons
     PlatformDialogAction cancelButton = PlatformDialogAction(
       child: Text("Отмена"),
