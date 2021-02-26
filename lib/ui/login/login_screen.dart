@@ -83,6 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(height: 52.0),
+                  SvgPicture.asset("assets/images/logo_login.svg", width: 178.0, height: 26.0),
+                  Spacer(),
                   GestureDetector(child: Text('Account Login', style: TextStyle(color: Color(0xCC000000), fontSize: 23.0, fontWeight: FontWeight.bold)),
                     onTap: () => _switchPlatform(context),
                   ),
@@ -90,11 +93,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   SberTextField(onChanged: (value) => _login = value, placeholder: "Логин",),
                   SizedBox(height: 12.0),
                   SberTextField(onChanged: (password) => _password = password, placeholder: "Пароль", isPassword: true),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
+                      child: InkWell(
+                        onTap: () => {},
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+                          child: Text("Forgot Password", style: TextStyle(color: Color(0xFF343F48), fontSize: 11.0)),
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 32.0),
                   auth.loggedInStatus == Status.Authenticating ?  PlatformCircularProgressIndicator() :
                   SberButton(text: "Войти", onPressed: doLogin),
                   SizedBox(height: 12.0),
                   SberButton(text: "Регистрация", onPressed: doLogin, style: SberButtonStyle.Bordered),
+                  Spacer(),
                 ],
               ),
             ),
