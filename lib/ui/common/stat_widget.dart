@@ -7,6 +7,7 @@ class StatBlockView extends StatefulWidget {
   final String sumTitle;
   final String date;
   final Map<String, int> data;
+  final int max;
 
   StatBlockView(
       {Key key,
@@ -14,7 +15,8 @@ class StatBlockView extends StatefulWidget {
       this.serviceName,
       this.sumTitle,
       this.date,
-      this.data})
+      this.data,
+      this.max})
       : super(key: key);
 
   @override
@@ -30,11 +32,15 @@ class _StatBlockState extends State<StatBlockView> {
   @override
   Widget build(BuildContext context) {
     var sum;
-    if (widget.data != null) {
-      sum = 0;
-      widget.data.forEach((key, value) {
-        sum += value;
-      });
+    if (widget.max != null) {
+      sum = widget.max;
+    } else {
+      if (widget.data != null) {
+        sum = 0;
+        widget.data.forEach((key, value) {
+          sum += value;
+        });
+      }
     }
 
     var rows;
@@ -43,30 +49,34 @@ class _StatBlockState extends State<StatBlockView> {
     } else {
       rows = Container();
     }
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(flex: 1, child: rows),
-            _StatSum(sum, title: widget.sumTitle)
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            widget.serviceIcon != null
-                ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3.0),
-                  child: SberIcon(widget.serviceIcon),
-                )
-                : SizedBox(),
-            Text(widget.serviceName ?? "", style: _serviceNameStyle),
-            Spacer(),
-            Text(widget.date ?? "", style: _dateStyle),
-          ],
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12.0, 24.0, 12.0, 4.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(flex: 1, child: rows),
+              _StatSum(sum, title: widget.sumTitle)
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widget.serviceIcon != null
+                  ? Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3.0),
+                    child: SberIcon(widget.serviceIcon),
+                  )
+                  : SizedBox(),
+              Text(widget.serviceName ?? "", style: _serviceNameStyle),
+              Spacer(),
+              Text(widget.date ?? "", style: _dateStyle),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

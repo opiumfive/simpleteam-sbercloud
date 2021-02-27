@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/profile_usecase.dart';
@@ -46,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         UserDetail userDetail = baseModelUser.data;
         if (userDetail == null) {
           final String error = baseModelUser.error.getErrorMessage();
-          ToastUtils.showCustomToast(context, "Ошибка входа: $error");
+          ToastUtils.showToastError(context, "Ошибка загрузки профиля: $error");
           print(error);
         } else {
           Provider.of<UserProvider>(context, listen: false).setDetails(
@@ -88,19 +89,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(height: 20.0),
           Text(user.name, style: TextStyle(color: Color(0xCC343F48), fontSize: 24.0, fontWeight: FontWeight.bold)),
           SizedBox(height: 24.0),
-          InfoRow("User ID:", icon: SberIcon.UserId, data: userDetail.id, onCopy: onCopy),
-          InfoRow("Account ID:", icon: SberIcon.AccountId, data: userDetail.domain_id, onCopy: onCopy),
+          InfoRow("User ID:", icon: SberIcon.UserId, data: userDetail.id, onCopy: (value) {
+            onCopy(context, value);
+          }),
+          InfoRow("Account ID:", icon: SberIcon.AccountId, data: userDetail.domain_id, onCopy: (value) {
+            onCopy(context, value);
+          }),
           InfoRow("Account Name:", icon: SberIcon.AccountName, data: userDetail.name),
           InfoRow("Email Address:", icon: SberIcon.AccountMail, data: userDetail.email),
           InfoRow("Mobile Number:", icon: SberIcon.AccountPhone, data: userDetail.phone),
-          Text("Test"),
-          StatBlockView(serviceIcon: SberIcon.Eye12dp, serviceName: "Eye Cloud", sumTitle: "All alarm",date: "Updated date: 15:37:19", data: {"Critical": 1, "Major": 2, "Minor:": 20, "Info:3": 45},)
         ],
       ),
     );
   }
 
-  void onCopy(String value) {
-    print("copy:" + value);
+  void onCopy(BuildContext context, String value) {
+    Clipboard.setData(new ClipboardData(text: value));
+    ToastUtils.showToastInfo(context, "Скопировано");
   }
 }
