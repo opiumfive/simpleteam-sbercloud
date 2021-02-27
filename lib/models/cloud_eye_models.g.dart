@@ -201,11 +201,11 @@ Datapoint _$DatapointFromJson(Map<String, dynamic> json) {
     timestamp: json['timestamp'] as int,
     unit: json['unit'] as String,
   )
-    ..average = json['average'] as int
-    ..max = json['max'] as int
-    ..min = json['min'] as int
-    ..sum = json['sum'] as int
-    ..variance = json['variance'] as int;
+    ..average = (json['average'] as num)?.toDouble()
+    ..max = (json['max'] as num)?.toDouble()
+    ..min = (json['min'] as num)?.toDouble()
+    ..sum = (json['sum'] as num)?.toDouble()
+    ..variance = (json['variance'] as num)?.toDouble();
 }
 
 Map<String, dynamic> _$DatapointToJson(Datapoint instance) => <String, dynamic>{
