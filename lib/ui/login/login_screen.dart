@@ -2,10 +2,7 @@ import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
 import 'package:sbercloud_flutter/models/auth_models.dart';
-import 'package:sbercloud_flutter/storage/user_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +20,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _showPassword = false;
-  String _login, _password;
+  String _login = "hackathon113";
+  String _password = "simpleteam123";
+
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -88,9 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () => _switchPlatform(context),
                   ),
                   SizedBox(height: 18.0),
-                  SberTextField(onChanged: (value) => _login = value, placeholder: "Логин",),
+                  SberTextField(onChanged: (value) => _login = value, placeholder: "Логин", text: _login),
                   SizedBox(height: 12.0),
-                  SberTextField(onChanged: (password) => _password = password, placeholder: "Пароль", isPassword: true),
+                  SberTextField(onChanged: (password) => _password = password, placeholder: "Пароль", text: _password, isPassword: true),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
