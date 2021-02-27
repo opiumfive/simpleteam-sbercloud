@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
+import 'package:sbercloud_flutter/const.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
 import 'package:sbercloud_flutter/models/cloud_eye_models.dart';
 
@@ -107,7 +109,7 @@ class _ChartViewState extends State<ChartView> {
             case ConnectionState.none:
             case ConnectionState.waiting:
               return SizedBox(
-                height: MediaQuery.of(context).size.height / 1.3,
+                height: 140,
                 child: Center(
                   child: PlatformCircularProgressIndicator(),
                 ),
@@ -121,6 +123,13 @@ class _ChartViewState extends State<ChartView> {
               return _mainWidget();
           }
         });
+  }
+
+  void goDetail() {
+    if (widget.gesturesControl == false && widget.chartData.length > 0) {
+      String key = widget.metrics[0].namespace + "+" + widget.metrics[0].metric_name;
+      Navigator.pushNamed(context, DETAIL_ROUTE, arguments: key);
+    }
   }
 
   Widget _mainWidget() {
@@ -211,7 +220,7 @@ class _ChartViewState extends State<ChartView> {
 
 
             Text(
-              'Updated   16:39:39',
+              'Updated   ${DateFormat("hh:mm:ss", "ru").format(DateTime.now())}',
               style: TextStyle(
                   color: Color(0xFF343F48).withOpacity(0.37),
                   fontSize: 9,

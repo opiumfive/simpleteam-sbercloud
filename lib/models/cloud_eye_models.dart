@@ -109,6 +109,18 @@ class Metric {
   String metric_name;
   List<Dimension> dimensions;
 
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Metric &&
+          runtimeType == other.runtimeType &&
+          namespace == other.namespace &&
+          metric_name == other.metric_name;
+
+  @override
+  int get hashCode => namespace.hashCode ^ metric_name.hashCode;
+
   String getHumanTitle() {
     return getHumanNamespace() + " " + getHumanName();
   }

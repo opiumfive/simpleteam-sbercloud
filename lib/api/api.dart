@@ -24,31 +24,6 @@ abstract class RestClient {
 
   @GET("/v3/projects")
   Future<void> projects(@Header("X-Auth-Token") String token);
-  /* Output example
-  {
-    "projects": [
-        {
-            "domain_id": "65382450e8f64ac0870cd180d14e684b",
-            "is_domain": false,
-            "parent_id": "65382450e8f64ac0870cd180d14e684b",
-            "name": "project_name",
-            "description": "",
-            "links": {
-                "next": null,
-                "previous": null,
-                "self": "https://www.example.com/v3/projects/a4a5d4098fb4474fa22cd05f897d6b99"
-            },
-            "id": "a4a5d4098fb4474fa22cd05f897d6b99",
-            "enabled": true
-        }
-    ],
-    "links": {
-        "next": null,
-        "previous": null,
-        "self": "https://www.example.com/v3/projects"
-    }
-}
-   */
 
   @GET("/v3.0/OS-USER/users/{user_id}")
   Future<UserDetailResponse> user(@Header("X-Auth-Token") String token, @Path() String user_id);

@@ -2,6 +2,7 @@
 // screens
 const LOGIN_ROUTE = "/auth";
 const MAIN_ROUTE = "/main";
+const DETAIL_ROUTE = "/detail";
 
 // api
 const API_HOST = "https://some.some.ru";

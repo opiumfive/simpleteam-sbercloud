@@ -6,6 +6,7 @@ import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_trace_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/profile_usecase.dart';
 import 'package:sbercloud_flutter/const.dart';
+import 'package:sbercloud_flutter/ui/main/detail_screen.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -140,6 +141,7 @@ class _AppState extends State<App> {
               routes: {
                 LOGIN_ROUTE: (BuildContext context) => LoginScreen(),
                 MAIN_ROUTE: (BuildContext context) => MainScreen(),
+                DETAIL_ROUTE: (BuildContext context) => DetailScreen(),
               }),
         ),
       ),

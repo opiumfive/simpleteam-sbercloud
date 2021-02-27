@@ -33,6 +33,7 @@ class MainProvider with ChangeNotifier {
   Map<String, List<ChartDataSeries>> chartDataCache = Map();
   Set<String> excludedMetrics = Set();
   List<Resource> resources;
+  List<Special> specials;
 
   List<Metric> get metrics => _metrics;
   List<MetricAlarm> get alarms => _alarms;

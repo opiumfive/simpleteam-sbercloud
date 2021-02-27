@@ -204,6 +204,26 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       BaseModel<List<Metric>> metrics = await cloudEyeUsecase.metrics();
       if (metrics != null && metrics.data != null) {
         mainProvider.setMetrics(metrics.data);
+
+        List<Metric> special = metrics.data.where((element) => element.metric_name.contains("reject") ||
+            element.metric_name.contains("inbound") || element.metric_name.contains("traffic") ||
+            element.metric_name.contains("cpu") || element.metric_name.contains("disk")).toList();
+        special = special.toSet().toList();
+        if (special.length > 5) {
+          special = special.sublist(0, 5);
+        }
+        List<Special> specials = List.empty(growable: true);
+        for (int i = 0; i < special.length; i++) {
+          BaseModel<List<Datapoint>> resp = await cloudEyeUsecase
+              .metricData(special[i], mainProvider.range,
+              mainProvider.interval,
+              filter: "average");
+          if (resp != null && resp.data != null && resp.data.isNotEmpty) {
+            String value = "${resp.data.last.getData()} ${special[i].unit}";
+            specials.add(Special(value, special[i].getHumanTitle()));
+          }
+        }
+        mainProvider.specials = specials;
       }
       BaseModel<List<Resource>> resources = await cloudEyeUsecase.quotas();
       if (resources != null && resources.data != null) {
@@ -229,6 +249,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                 return Text('fail');
               final List<Metric> metrics = mainProvider.metrics;
               final List<Resource> resources = mainProvider.resources;
+              final List<Special> specials = mainProvider.specials;
 
               final groups = groupBy(metrics, (Metric e) {
                 return '${e.namespace}+${e.metric_name}';
@@ -241,7 +262,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                       ? SizedBox(
                           height: 150,
                           child: ListView.builder(
-                              itemCount: resources.length,
+                              itemCount: resources.length + specials.length,
                               padding: EdgeInsets.fromLTRB(30, 30, 0, 30),
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (ctx, indexHor) {
@@ -256,7 +277,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6.0),
                                     ),
-                                    child: Stack(
+                                    child: indexHor < resources.length ? Stack(
                                       alignment: AlignmentDirectional.center,
                                       children: [
                                         Container(
@@ -315,7 +336,11 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                                     .capitalize(),
                                                 style: TextStyle(fontSize: 6)))
                                       ],
-                                    ),
+                                    ) : Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                      Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48))),
+                                      SizedBox(height: 2,),
+                                      Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 6))
+                                    ],),
                                   ),
                                 );
                               }),
@@ -386,13 +411,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider,
       CloudEyeUsecase cloudEyeUsecase) {
-    return ChartView(
+    return InkWell(borderRadius: BorderRadius.all(Radius.circular(6)),
+        onTap: () {
+      print("surprise");
+      ToastUtils.showCustomToast(context, "message");
+        }
+    , child: ChartView(
       metrics: metrics,
       mainProvider: mainProvider,
       cloudEyeUsecase: cloudEyeUsecase,
       axisVisible: false,
       gesturesControl: false,
-    );
+    ));
   }
 }
 

@@ -18,3 +18,10 @@ class ChartDataSeries {
   final String title;
   final String unit;
 }
+
+class Special {
+  String title;
+  String subtitle;
+
+  Special(this.title, this.subtitle);
+}
