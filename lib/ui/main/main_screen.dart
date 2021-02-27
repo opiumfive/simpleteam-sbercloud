@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sbercloud_flutter/ui/common/icon_button_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -54,6 +55,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.inactive) {}
   }
 
+  void onEdit() {
+    print("onEdit");
+  }
+
+  void onAlert() {
+    print("onAlert");
+  }
+
+  void onLogout() {
+    print("onLogout");
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
@@ -71,12 +84,29 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         label: 'Configuration',
       ),
       BottomNavigationBarItem(
-        icon: const SberIcon(SberIcon.Settings),
-        label: 'Settings',
+        icon: const SberIcon(SberIcon.Profile),
+        label: 'Profile',
       ),
     ];
 
+    final label = bottomNavigationBarItems[_currentIndex].label;
+    final title = Text(label, style: TextStyle(color: Color(0xFF343F48), fontSize: 27.0, fontWeight: FontWeight.bold));
+
+    var actions = <Widget>[];
+    switch (_currentIndex) {
+      case 0:
+          actions.add(SberIconButton(SberIcon.Edit, onPressed: onEdit));
+          actions.add(SberIconButton(SberIcon.Alarm, onPressed: onAlert, counter: 8));
+        break;
+      case 1:
+        break;
+      case 2:
+        actions.add(SberIconButton(SberIcon.Logout, onPressed: onLogout));
+        break;
+    }
+
     return Scaffold(
+        appBar: AppBar(title: title, actions: actions,),
         backgroundColor: Colors.white, //Color.fromARGB(255, 21, 50, 67),
         body: PageTransitionSwitcher(
           child: case2(

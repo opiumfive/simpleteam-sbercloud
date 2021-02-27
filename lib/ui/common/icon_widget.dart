@@ -6,19 +6,31 @@ class SberIcon extends StatelessWidget {
   final Color color;
   final double size;
 
+  //Nav
+  static const Back = "ic_back.svg";
   static const Configuration = "ic_configuration.svg";
   static const Dashboard = "ic_dashboard.svg";
   static const Settings = "ic_settings.svg";
+  static const Profile = "ic_profile.svg";
+
+  //Dashboard
   static const Alarm = "ic_alarm.svg";
   static const Edit = "ic_edit.svg";
-  static const Profile = "ic_profile.svg";
   static const ArrowUp = "ic_arrow_up.svg";
   static const ArrowDown = "ic_arrow_down.svg";
-
   static const Eye12dp = "ic_eye_12dp.svg";
   static const Close12dp = "ic_close_12dp.svg";
   static const Close16dp = "ic_close_16dp.svg";
   static const Plus40dp = "ic_plus_40dp.svg";
+
+  //Profile
+  static const Logout = "ic_log_out.svg";
+  static const Clipboard = "ic_clipboard.svg";
+  static const UserId = "ic_user_id.svg";
+  static const AccountId = "ic_account_id.svg";
+  static const AccountName = "ic_account_name.svg";
+  static const AccountMail = "ic_account_mail.svg";
+  static const AccountPhone = "ic_account_phone.svg";
 
   const SberIcon(
       this.icon, {
