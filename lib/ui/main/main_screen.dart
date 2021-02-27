@@ -168,23 +168,28 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(groups[groups.keys.toList()[index]].first.getHumanName()),
-                              ChartView(
-                                metrics: groups[groups.keys.toList()[index]],
-                                mainProvider: mainProvider,
-                                cloudEyeUsecase: cloudEyeUsecase,
-                                axisVisible: false,
-                                gesturesControl: false,
-                              ),
-                            ]))
-                  );
+                        child: _dashboardItem(groups[groups.keys.toList()[index]], mainProvider, cloudEyeUsecase)
+                  ));
                 },
               );
           }
         });
+  }
+
+  Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider, CloudEyeUsecase cloudEyeUsecase) {
+
+    return SizedBox(width: double.infinity, height: 120, child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(metrics.first.getHumanName()),
+          ChartView(
+            metrics: metrics,
+            mainProvider: mainProvider,
+            cloudEyeUsecase: cloudEyeUsecase,
+            axisVisible: false,
+            gesturesControl: false,
+          ),
+        ]));
   }
 }
 

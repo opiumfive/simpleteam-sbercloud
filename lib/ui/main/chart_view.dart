@@ -51,13 +51,9 @@ class _ChartViewState extends State<ChartView> {
         enablePanning: widget.gesturesControl,
         enableMouseWheelZooming: false);
 
+    String key = widget.metrics[0].namespace + "+" + widget.metrics[0].metric_name;
+
     Future<List<ChartDataSeries>> loadData() async {
-
-      String key = widget.metrics[0].namespace + "+" + widget.metrics[0].metric_name;
-      if (widget.mainProvider.chartDataCache.containsKey(key)) {
-
-        return widget.mainProvider.chartDataCache[key];
-      }
       
       List<ChartDataSeries> result = List.empty(growable: true);
 
@@ -81,6 +77,11 @@ class _ChartViewState extends State<ChartView> {
       widget.mainProvider.chartDataCache[key] = result;
 
       return result;
+    }
+
+    if (widget.mainProvider.chartDataCache.containsKey(key)) {
+      widget.chartData = widget.mainProvider.chartDataCache[key];
+      return _mainWidget();
     }
 
     return FutureBuilder(
@@ -117,6 +118,7 @@ class _ChartViewState extends State<ChartView> {
           1.0
         ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
       ),
+      height: 64,
       child: SfCartesianChart(
         plotAreaBorderWidth: 0,
         //title: ChartTitle(text: widget.chartData.first.title),
