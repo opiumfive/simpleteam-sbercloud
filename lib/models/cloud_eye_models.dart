@@ -109,6 +109,180 @@ class Metric {
   String metric_name;
   List<Dimension> dimensions;
 
+  String getHumanTitle() {
+    return getHumanNamespace() + " " + getHumanName();
+  }
+
+  String  getHumanNamespace() {
+    switch(namespace) {
+      case "SYS.ECS":
+        return "Elastic Cloud Server";
+      case "AGT.ECS":
+        return "ECS OS Monitoring";
+      case "SYS.AS":
+        return "Auto Scaling";
+      case "SYS.EVS":
+        return "Elastic Volume Service";
+      case "SYS.OBS":
+        return "Object Storage Service";
+      case "SYS.SFS":
+        return "Scalable File Service";
+      case "SYS.VPC":
+        return "Elastic IP and bandwidth";
+      case "SYS.ELB":
+        return "Elastic Load Balance";
+      case "SYS.NAT":
+        return "NAT Gateway";
+      case "SYS.DMS":
+        return "Distributed Message Service";
+      case "SYS.DCS":
+        return "Distributed Cache Service";
+      case "SYS.RDS":
+        return "Relational Database Service";
+      case "SYS.DDS":
+        return "Document Database Service";
+      case "SYS.ES":
+        return "Cloud Search Service";
+      case "SYS.APIG":
+        return "API Gateway";
+      case "SYS.FunctionGraph":
+        return "Function graph";
+
+      default:
+        namespace;
+    }
+  }
+
+  String getHumanName() {
+    switch(metric_name) {
+      case "cpu_util":
+        return "CPU Usage";
+      case "mem_util":
+        return "Memory Usage";
+      case "disk_util_inband":
+        return "Disk Usage";
+      case "disk_read_bytes_rate":
+        return "Disk Read Bandwidth";
+      case "disk_write_bytes_rate":
+        return "Disk Write Bandwidth";
+      case "disk_read_requests_rate":
+        return "Disk Read IOPS";
+      case "disk_write_requests_rate":
+        return "Disk Write IOPS";
+      case "network_incoming_bytes_rate_inband":
+        return "Inband Incoming Rate";
+      case "network_outgoing_bytes_rate_inband":
+        return "Inband Outgoing Rate";
+      case "network_incoming_bytes_aggregate_rate":
+        return "Outband Incoming Rate";
+      case "network_outgoing_bytes_aggregate_rate":
+        return "Outband Outgoing Rate";
+      case "instance_num":
+        return "Inband Outgoing Rate";
+      case "gpu_usage_mem":
+        return "Video Memory Usage";
+      case "gpu_usage_gpu":
+        return "GPU Usage";
+      case "mem_usedPercent":
+        return "Memory Usage";
+      case "mountPointPrefix_disk_free":
+        return "Available Disk Space";
+      case "mountPointPrefix_disk_usedPercent":
+        return "Disk Usage";
+      case "disk_ioUtils":
+        return "Disk I/O Usage";
+      case "disk_inodesUsedPercent":
+        return "Percentage of Total inode Used";
+      case "net_bitSent":
+        return "Inbound Bandwidth";
+      case "net_bitRecv":
+        return "Outbound Bandwidth";
+      case "net_packetRecv":
+        return "NIC Packet Receive Rate";
+      case "net_packetSent":
+        return "NIC Packet Send Rate";
+      case "net_tcp_total":
+        return "Total number of TCP connections";
+      case "net_tcp_established":
+        return "Number of ESTABLISHED TCP connections";
+      case "load_average15":
+        return "15-Minute Load Average";
+      case "load_average5":
+        return "5-Minute Load Average";
+      case "load_average1":
+        return "1-Minute Load Average";
+      case "disk_device_read_bytes_rate":
+        return "Disk Read Bandwidth";
+      case "disk_device_write_bytes_rate":
+        return "Disk Write Bandwidth";
+      case "disk_device_read_requests_rate":
+        return "Disk Read IOPS";
+      case "disk_device_write_requests_rate":
+        return "Disk Write IOPS";
+      case "download_bytes":
+        return "Bytes Downloaded";
+      case "upload_bytes":
+        return "Bytes Uploaded";
+      case "get_request_count":
+        return "GET Requests";
+      case "put_request_count":
+        return "PUT Requests";
+      case "first_byte_latency":
+        return "First Byte Download Delay";
+      case "request_count_4xx":
+        return "4xx Errors";
+      case "request_count_5xx":
+        return "5xx Errors";
+      case "read_bandwidth":
+        return "Read Bandwidth";
+      case "write_bandwidth":
+        return "Write Bandwidth";
+      case "rw_bandwidth":
+        return "Read and Write Bandwidth";
+      case "upstream_bandwidth":
+        return "Outbound Bandwidth";
+      case "downstream_bandwidth":
+        return "Inbound Bandwidth";
+      case "upstream_bandwidth_usage":
+        return "Outbound Bandwidth Usage";
+      case "up_stream":
+        return "Outbound Traffic";
+      case "down_stream":
+        return "Inbound Traffic";
+      case "rejectcount":
+        return "Reject count";
+      case "failcount":
+        return "Fail count";
+      case "minDuration":
+        return "Min duration";
+      case "maxDuration":
+        return "Max duration";
+      case "duration":
+        return "Duration";
+      case "count":
+        return "Count";
+      case "req_count_error":
+        return "Requests error count";
+      case "req_count_5xx":
+        return "5xx requests";
+      case "req_count_4xx":
+        return "4xx requests";
+      case "req_count_2xx":
+        return "2xx requests";
+      case "req_count":
+        return "Requests";
+      case "output_throughput":
+        return "Output Throughput";
+      case "input_throughput":
+        return "Input Throughput";
+      case "max_latency":
+        return "Max latency";
+      case "avg_latency":
+        return "Average latency";
+      default: return metric_name;
+    }
+  }
+
   Metric({this.namespace, this.unit, this.metric_name, this.dimensions});
 
   factory Metric.fromJson(Map<String, dynamic> json) => _$MetricFromJson(json);
@@ -156,15 +330,15 @@ class MetricDataResponse {
 
 @JsonSerializable()
 class Datapoint {
-  int average;
-  int max;
-  int min;
-  int sum;
-  int variance;
+  double average;
+  double max;
+  double min;
+  double sum;
+  double variance;
   int timestamp;
   String unit;
 
-  int getData() {
+  double getData() {
     return average != null ? average : max != null ? max : min != null ? min : sum != null ? sum : variance != null ? variance : 0;
   }
 
