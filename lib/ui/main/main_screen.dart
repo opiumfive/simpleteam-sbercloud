@@ -20,8 +20,9 @@ import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:animations/animations.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+
 import "package:collection/collection.dart";
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../../const.dart';
 import '../toast_utils.dart';
 import 'chart_data.dart';
@@ -69,16 +70,20 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     // set up the buttons
     PlatformDialogAction cancelButton = PlatformDialogAction(
       child: Text("Отмена"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
     PlatformDialogAction continueButton = PlatformDialogAction(
       child: Text("Да"),
-      onPressed:  () {
+      onPressed: () {
         UserPreferences().removeUser();
         Provider.of<UserProvider>(context, listen: false).setUser(new User());
-        Navigator.pushNamedAndRemoveUntil(context, LOGIN_ROUTE,ModalRoute.withName('/auth'),);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          LOGIN_ROUTE,
+          ModalRoute.withName('/auth'),
+        );
       },
     );
     // set up the AlertDialog
@@ -101,7 +106,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-
     var bottomNavigationBarItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
         icon: const SberIcon(SberIcon.Dashboard),
@@ -118,33 +122,41 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     ];
 
     final label = bottomNavigationBarItems[_currentIndex].label;
-    final title = Text(label, style: TextStyle(color: Color(0xFF343F48), fontSize: 27.0, fontWeight: FontWeight.bold));
+    final title = Text(label,
+        style: TextStyle(
+            color: Color(0xFF343F48),
+            fontSize: 27.0,
+            fontWeight: FontWeight.bold));
 
     AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
 
     var actions = <Widget>[];
     switch (_currentIndex) {
       case 0:
-          actions.add(SberIconButton(SberIcon.Edit, onPressed: onEdit));
-          actions.add(SberIconButton(SberIcon.Alarm, onPressed: onAlert, counter: 8));
+        actions.add(SberIconButton(SberIcon.Edit, onPressed: onEdit));
+        actions.add(
+            SberIconButton(SberIcon.Alarm, onPressed: onAlert, counter: 8));
         break;
       case 1:
         break;
       case 2:
-        actions.add(SberIconButton(SberIcon.Logout, onPressed: () => {
-          showLogoutDialog(context, api)
-        }));
+        actions.add(SberIconButton(SberIcon.Logout,
+            onPressed: () => {showLogoutDialog(context, api)}));
         break;
     }
 
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(title: title, actions: actions,),
+        appBar: AppBar(
+          title: title,
+          actions: actions,
+        ),
         body: PageTransitionSwitcher(
           child: case2(
               _currentIndex,
               {
-                0: Center(child: Container(
+                0: Center(
+                    child: Container(
                   key: UniqueKey(),
                   //padding: EdgeInsets.all(16.0),
                   child: _mainWidget(),
@@ -183,27 +195,25 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Widget _mainWidget() {
     // test widget
-    CloudEyeUsecase cloudEyeUsecase = Provider.of<CloudEyeUsecase>(context, listen: false);
-    MainProvider mainProvider = Provider.of<MainProvider>(context, listen: false);
-    /*Future<List<Datapoint>> datapoints() async {
+    CloudEyeUsecase cloudEyeUsecase =
+        Provider.of<CloudEyeUsecase>(context, listen: false);
+    MainProvider mainProvider =
+        Provider.of<MainProvider>(context, listen: false);
+
+    Future<bool> getData() async {
       BaseModel<List<Metric>> metrics = await cloudEyeUsecase.metrics();
       if (metrics != null && metrics.data != null) {
         mainProvider.setMetrics(metrics.data);
-
-        Metric metric = metrics.data[2];
-        BaseModel<List<Datapoint>> data = await cloudEyeUsecase.metricData(
-            metric,
-            DateTimeRange(
-                start: DateTime.now().subtract(Duration(hours: 24)),
-                end: DateTime.now()),
-            3600,
-            filter: "average");
-        return data.data;
       }
-    }*/
+      BaseModel<List<Resource>> resources = await cloudEyeUsecase.quotas();
+      if (resources != null && resources.data != null) {
+        mainProvider.resources = resources.data;
+      }
+      return true;
+    }
 
     return FutureBuilder(
-        future: cloudEyeUsecase.metrics(),
+        future: getData(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -217,62 +227,172 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             default:
               if (snapshot.hasError || snapshot.data == null)
                 return Text('fail');
-              final List<Metric> metrics = snapshot.data.data;
+              final List<Metric> metrics = mainProvider.metrics;
+              final List<Resource> resources = mainProvider.resources;
 
               final groups = groupBy(metrics, (Metric e) {
                 return '${e.namespace}+${e.metric_name}';
               });
 
               return ListView.builder(
-                itemCount: groups.keys.length,
-
+                itemCount: groups.keys.length + 1,
                 itemBuilder: (ctx, index) {
-                  return Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                      SizedBox(height: 20,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(child: Text(groups[groups.keys.toList()[index]].first.getHumanName(), overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            softWrap: false,style: TextStyle(color: Color(0xFF343F48), fontSize: 16, fontWeight: FontWeight.bold),),),
-                          InkWell(onTap: () {
-                            mainProvider.excludedMetrics.add(groups.keys.toList()[index]);
-                          }, child: Icon(Icons.close, color: Color(0xFF343F48).withOpacity(0.2)),)
-                        ],
-                      ),
-
-                      SizedBox(height: 12,),
-                      Card(
-                          shadowColor: Color(0xFF000000).withOpacity(0.5),
-                          elevation: 13,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: _dashboardItem(groups[groups.keys.toList()[index]], mainProvider, cloudEyeUsecase)
-                      )
-                    ],));
+                  return index == 0
+                      ? SizedBox(
+                          height: 150,
+                          child: ListView.builder(
+                              itemCount: resources.length,
+                              padding: EdgeInsets.fromLTRB(30, 30, 0, 30),
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (ctx, indexHor) {
+                                return Container(
+                                  width: 100,
+                                  height: 100,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Card(
+                                    shadowColor:
+                                        Color(0xFF000000).withOpacity(0.5),
+                                    elevation: 13,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6.0),
+                                    ),
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.center,
+                                      children: [
+                                        Container(
+                                            margin: EdgeInsets.only(bottom: 10),
+                                            width: 55,
+                                            height: 55,
+                                            child: SfRadialGauge(axes: <
+                                                RadialAxis>[
+                                              RadialAxis(
+                                                  minimum: 0,
+                                                  maximum: 100,
+                                                  showLabels: false,
+                                                  showTicks: false,
+                                                  radiusFactor: 0.8,
+                                                  startAngle: 270,
+                                                  endAngle: 270,
+                                                  axisLineStyle: AxisLineStyle(
+                                                    thickness: 0.17,
+                                                    cornerStyle:
+                                                        CornerStyle.bothFlat,
+                                                    color:
+                                                        const Color(0xFFE5E5E5),
+                                                    thicknessUnit:
+                                                        GaugeSizeUnit.factor,
+                                                  ),
+                                                  pointers: <GaugePointer>[
+                                                    RangePointer(
+                                                        value: resources[indexHor].used.toDouble() / resources[indexHor].quota > 0.1
+                                                            ? resources[indexHor].used.toDouble()
+                                                            : resources[indexHor].quota * 0.11,
+                                                        cornerStyle: CornerStyle.bothCurve,
+                                                        width: 0.22,
+                                                        sizeUnit: GaugeSizeUnit.factor,
+                                                        enableAnimation: true,
+                                                        animationDuration: 20,
+                                                        color: const Color(0xFF07E897),
+                                                        animationType: AnimationType.linear)
+                                                  ],
+                                                  annotations: <
+                                                      GaugeAnnotation>[
+                                                    GaugeAnnotation(
+                                                        positionFactor: 0.1,
+                                                        angle: 90,
+                                                        widget: Text(
+                                                          resources[indexHor].used.toStringAsFixed(0) + '/' + resources[indexHor].quota.toStringAsFixed(0),
+                                                          style: const TextStyle(fontSize: 10, color: Color(0xA3000000), fontWeight: FontWeight.bold),
+                                                        ))
+                                                  ])
+                                            ])),
+                                        Container(
+                                            margin: EdgeInsets.only(bottom: 10),
+                                            alignment: Alignment.bottomCenter,
+                                            child: Text(
+                                                resources[indexHor]
+                                                    .type
+                                                    .capitalize(),
+                                                style: TextStyle(fontSize: 6)))
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              SizedBox(
+                                height: index == 1 ? 0 : 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      groups[groups.keys.toList()[index - 1]]
+                                          .first
+                                          .getHumanName(),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      style: TextStyle(
+                                          color: Color(0xFF343F48),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Visibility(
+                                      visible: false,
+                                      child: InkWell(
+                                        onTap: () {
+                                          mainProvider.excludedMetrics.add(
+                                              groups.keys.toList()[index - 1]);
+                                        },
+                                        child: Icon(Icons.close,
+                                            color: Color(0xFF343F48)
+                                                .withOpacity(0.2)),
+                                      ))
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Card(
+                                  shadowColor:
+                                      Color(0xFF000000).withOpacity(0.5),
+                                  elevation: 13,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
+                                  child: _dashboardItem(
+                                      groups[groups.keys.toList()[index - 1]],
+                                      mainProvider,
+                                      cloudEyeUsecase))
+                            ],
+                          ));
                 },
               );
           }
         });
   }
 
-  Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider, CloudEyeUsecase cloudEyeUsecase) {
-
+  Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider,
+      CloudEyeUsecase cloudEyeUsecase) {
     return ChartView(
-            metrics: metrics,
-            mainProvider: mainProvider,
-            cloudEyeUsecase: cloudEyeUsecase,
-            axisVisible: false,
-            gesturesControl: false,
-          );
+      metrics: metrics,
+      mainProvider: mainProvider,
+      cloudEyeUsecase: cloudEyeUsecase,
+      axisVisible: false,
+      gesturesControl: false,
+    );
   }
 }
 

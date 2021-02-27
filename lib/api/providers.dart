@@ -32,6 +32,7 @@ class MainProvider with ChangeNotifier {
   int _interval = 3600;
   Map<String, List<ChartDataSeries>> chartDataCache = Map();
   Set<String> excludedMetrics = Set();
+  List<Resource> resources;
 
   List<Metric> get metrics => _metrics;
   List<MetricAlarm> get alarms => _alarms;

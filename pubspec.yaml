@@ -41,6 +41,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^18.4.30-beta
   syncfusion_flutter_charts: ^18.4.30
   syncfusion_flutter_sliders: ^18.4.30-beta
+  syncfusion_flutter_gauges: ^18.4.30
   web_socket_channel: ^1.2.0
   simple_animations: ^1.3.3
   animations: ^1.1.2
