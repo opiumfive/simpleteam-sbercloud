@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
@@ -10,7 +11,6 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'chart_data.dart';
 
 class ChartView extends StatefulWidget {
-
   List<ChartDataSeries> chartData;
 
   CloudEyeUsecase cloudEyeUsecase;
@@ -20,7 +20,14 @@ class ChartView extends StatefulWidget {
   bool axisVisible = true;
   bool gesturesControl = true;
 
-  ChartView({Key key, this.metrics, this.mainProvider, this.cloudEyeUsecase, this.axisVisible, this.gesturesControl}) : super(key: key);
+  ChartView(
+      {Key key,
+      this.metrics,
+      this.mainProvider,
+      this.cloudEyeUsecase,
+      this.axisVisible,
+      this.gesturesControl})
+      : super(key: key);
 
   @override
   _ChartViewState createState() => _ChartViewState();
@@ -51,26 +58,35 @@ class _ChartViewState extends State<ChartView> {
         enablePanning: widget.gesturesControl,
         enableMouseWheelZooming: false);
 
-    String key = widget.metrics[0].namespace + "+" + widget.metrics[0].metric_name;
+    String key =
+        widget.metrics[0].namespace + "+" + widget.metrics[0].metric_name;
 
     Future<List<ChartDataSeries>> loadData() async {
-      
       List<ChartDataSeries> result = List.empty(growable: true);
 
       for (int i = 0; i < widget.metrics.length; i++) {
-        BaseModel<List<Datapoint>> resp = await widget.cloudEyeUsecase.metricData(widget.metrics[i],
-            widget.mainProvider.range,
-            widget.mainProvider.interval,
-            filter: "average");
+        BaseModel<List<Datapoint>> resp = await widget.cloudEyeUsecase
+            .metricData(widget.metrics[i], widget.mainProvider.range,
+                widget.mainProvider.interval,
+                filter: "average");
         if (resp != null && resp.data != null) {
           List<ChartSampleData> data = resp.data
-              .map<ChartSampleData>((e) => ChartSampleData(x: DateTime.fromMillisecondsSinceEpoch(e.timestamp), yValue: e.getData()))
+              .map<ChartSampleData>((e) => ChartSampleData(
+                  x: DateTime.fromMillisecondsSinceEpoch(e.timestamp),
+                  yValue: e.getData()))
               .toList();
 
           // add fake point to draw line
-          if (data.length == 1) data = [ChartSampleData(x: data[0].x - 100, yValue: data[0].yValue), data[0]];
+          if (data.length == 1)
+            data = [
+              ChartSampleData(x: data[0].x - 100, yValue: data[0].yValue),
+              data[0]
+            ];
 
-          result.add(ChartDataSeries(data: data, title: widget.metrics[i].getHumanTitle(), unit: widget.metrics[i].unit));
+          result.add(ChartDataSeries(
+              data: data,
+              title: widget.metrics[i].getHumanTitle(),
+              unit: widget.metrics[i].unit));
         }
       }
 
@@ -108,76 +124,128 @@ class _ChartViewState extends State<ChartView> {
   }
 
   Widget _mainWidget() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: <Color>[
-          Color.fromARGB(15, 7,232,151),
-          Color.fromARGB(0, 7,232,151)
-        ], stops: <double>[
-          0.0,
-          1.0
-        ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-      ),
-      height: 64,
-      child: SfCartesianChart(
-        plotAreaBorderWidth: 0,
-        //title: ChartTitle(text: widget.chartData.first.title),
-        primaryXAxis: DateTimeAxis(
-            isVisible: widget.axisVisible,
-            enableAutoIntervalOnZooming: true,
-            majorGridLines: MajorGridLines(width: 0)),
-        tooltipBehavior: TooltipBehavior(enable: true, canShowMarker: false),
-        trackballBehavior: TrackballBehavior(enable: widget.gesturesControl),
-        zoomPanBehavior: _zoomingBehavior,
-        backgroundColor: Colors.transparent,
-        primaryYAxis: NumericAxis(
-          isVisible: widget.axisVisible,
-          enableAutoIntervalOnZooming: true,
-          labelFormat: '{value}',
-          axisLine: AxisLine(width: 0),
-          majorGridLines: MajorGridLines(width: 0),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+    Container(padding: EdgeInsets.fromLTRB(12, 12, 12, 4), child:
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Visibility(child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
+              SvgPicture.asset('assets/images/ic_arrow_up.svg'),
+              SizedBox(width: 3,),
+              Text(
+                widget.chartData.length > 1 ? "${widget.chartData[1].data.last.yValue} ${widget.chartData[1].unit}" : "",
+
+                style: TextStyle(
+                    color: Color(0xFF343F48),
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],), visible: widget.metrics.length > 1,),
+
+            Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
+              SvgPicture.asset('assets/images/ic_arrow_down.svg'),
+              SizedBox(width: 3,),
+              Text(
+                 "${widget.chartData[0].data.last.yValue} ${widget.chartData[0].unit}" ,
+                style: TextStyle(
+                    color: Color(0xFF343F48),
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],)
+
+          ],
+        ),),
+        Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: <Color>[
+              Color.fromARGB(15, 7, 232, 151),
+              Color.fromARGB(0, 7, 232, 151)
+            ], stops: <double>[
+              0.0,
+              1.0
+            ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+          ),
+          height: 90,
+          child: SfCartesianChart(
+            plotAreaBorderWidth: 0,
+            //title: ChartTitle(text: widget.chartData.first.title),
+            primaryXAxis: DateTimeAxis(
+                isVisible: widget.axisVisible,
+                enableAutoIntervalOnZooming: true,
+                majorGridLines: MajorGridLines(width: 0)),
+            tooltipBehavior:
+                TooltipBehavior(enable: true, canShowMarker: false),
+            trackballBehavior:
+                TrackballBehavior(enable: widget.gesturesControl),
+            zoomPanBehavior: _zoomingBehavior,
+            backgroundColor: Colors.transparent,
+            plotAreaBackgroundColor: Colors.transparent,
+            primaryYAxis: NumericAxis(
+              isVisible: widget.axisVisible,
+              enableAutoIntervalOnZooming: true,
+              labelFormat: '{value}',
+              axisLine: AxisLine(width: 0),
+              majorGridLines: MajorGridLines(width: 0),
+            ),
+            series: getTimeSeries(widget.chartData),
+          ),
         ),
-        series: getTimeSeries(widget.chartData),
-      ),
+        Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+          children: [
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              SvgPicture.asset('assets/images/ic_eye_12dp.svg'),
+              SizedBox(width: 6,),
+              Text(
+                widget.metrics[0].getHumanNamespace(),
+                style: TextStyle(
+                    color: Color(0xFF343F48).withOpacity(0.37),
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],),
+
+
+            Text(
+              'Updated   16:39:39',
+              style: TextStyle(
+                  color: Color(0xFF343F48).withOpacity(0.37),
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold),
+            ),
+
+          ],
+        ),)
+
+      ],
     );
   }
 
-  List<ChartSeries<ChartSampleData, DateTime>> getTimeSeries(List<ChartDataSeries> chartData) {
-
+  List<ChartSeries<ChartSampleData, DateTime>> getTimeSeries(
+      List<ChartDataSeries> chartData) {
     List<Color> colors = <Color>[
-      Color.fromARGB(214, 52,63,72),
-      Color.fromARGB(255, 7,232,151)
+      Color.fromARGB(214, 52, 63, 72),
+      Color.fromARGB(255, 7, 232, 151)
     ];
 
     int colorIndex = 0;
-    List<ChartSeries<ChartSampleData, DateTime>> result = chartData.map<ChartSeries<ChartSampleData, DateTime>>((e) => SplineSeries<ChartSampleData, DateTime>(
-      color: colors[colorIndex++ % colors.length],
-      width: 4,
-      dataSource: e.data,
-      xValueMapper: (ChartSampleData sales, _) => sales.x,
-      yValueMapper: (ChartSampleData sales, _) => sales.yValue,
-      name: e.title,
-    )).toList();
+    List<ChartSeries<ChartSampleData, DateTime>> result = chartData
+        .map<ChartSeries<ChartSampleData, DateTime>>(
+            (e) => SplineSeries<ChartSampleData, DateTime>(
+                  color: colors[colorIndex++ % colors.length],
+                  width: 3,
+                  dataSource: e.data,
+                  xValueMapper: (ChartSampleData sales, _) => sales.x,
+                  yValueMapper: (ChartSampleData sales, _) => sales.yValue,
+                  name: e.title,
+                ))
+        .toList();
     return result;
-
-    /*return <ChartSeries<ChartSampleData, DateTime>>[
-      SplineSeries<ChartSampleData, DateTime>(
-        color: const Color.fromRGBO(52, 63, 72, 84),
-        width: 5,
-        dataSource: chartData,
-        xValueMapper: (ChartSampleData sales, _) => sales.x,
-        yValueMapper: (ChartSampleData sales, _) => sales.yValue,
-        name: 'name',
-      ),
-      SplineSeries<ChartSampleData, DateTime>(
-        color: const Color.fromRGBO(52, 63, 72, 84),
-        width: 5,
-        dataSource: chartData,
-        xValueMapper: (ChartSampleData sales, _) => sales.x,
-        yValueMapper: (ChartSampleData sales, _) => sales.yValue,
-        name: 'name',
-      )
-    ];*/
   }
 }
-

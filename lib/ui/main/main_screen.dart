@@ -23,6 +23,7 @@ import 'package:animations/animations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import "package:collection/collection.dart";
 import '../../const.dart';
+import '../toast_utils.dart';
 import 'chart_data.dart';
 import 'chart_view.dart';
 
@@ -35,6 +36,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   int _currentIndex = 0;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
   void initState() {
@@ -110,7 +112,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               {
                 0: Center(child: Container(
                   key: UniqueKey(),
-                  padding: EdgeInsets.all(16.0),
+                  //padding: EdgeInsets.all(16.0),
                   child: _mainWidget(),
                 )),
                 1: Text('two'),
@@ -149,7 +151,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     // test widget
     CloudEyeUsecase cloudEyeUsecase = Provider.of<CloudEyeUsecase>(context, listen: false);
     MainProvider mainProvider = Provider.of<MainProvider>(context, listen: false);
-    Future<List<Datapoint>> datapoints() async {
+    /*Future<List<Datapoint>> datapoints() async {
       BaseModel<List<Metric>> metrics = await cloudEyeUsecase.metrics();
       if (metrics != null && metrics.data != null) {
         mainProvider.setMetrics(metrics.data);
@@ -164,7 +166,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             filter: "average");
         return data.data;
       }
-    }
+    }*/
 
     return FutureBuilder(
         future: cloudEyeUsecase.metrics(),
@@ -192,14 +194,36 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
                 itemBuilder: (ctx, index) {
                   return Container(
-                    child: Card(
-                        shadowColor: Color(0xFF234395).withOpacity(0.2),
-                        elevation: 15,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: _dashboardItem(groups[groups.keys.toList()[index]], mainProvider, cloudEyeUsecase)
-                  ));
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(child: Text(groups[groups.keys.toList()[index]].first.getHumanName(), overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,style: TextStyle(color: Color(0xFF343F48), fontSize: 16, fontWeight: FontWeight.bold),),),
+                          InkWell(onTap: () {
+                            mainProvider.excludedMetrics.add(groups.keys.toList()[index]);
+                          }, child: Icon(Icons.close, color: Color(0xFF343F48).withOpacity(0.2)),)
+                        ],
+                      ),
+
+                      SizedBox(height: 12,),
+                      Card(
+                          shadowColor: Color(0xFF000000).withOpacity(0.5),
+                          elevation: 13,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: _dashboardItem(groups[groups.keys.toList()[index]], mainProvider, cloudEyeUsecase)
+                      )
+                    ],));
                 },
               );
           }
@@ -208,18 +232,13 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider, CloudEyeUsecase cloudEyeUsecase) {
 
-    return SizedBox(width: double.infinity, height: 120, child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(metrics.first.getHumanName()),
-          ChartView(
+    return ChartView(
             metrics: metrics,
             mainProvider: mainProvider,
             cloudEyeUsecase: cloudEyeUsecase,
             axisVisible: false,
             gesturesControl: false,
-          ),
-        ]));
+          );
   }
 }
 

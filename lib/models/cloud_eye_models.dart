@@ -116,37 +116,37 @@ class Metric {
   String  getHumanNamespace() {
     switch(namespace) {
       case "SYS.ECS":
-        return "Elastic Cloud Server";
+        return "ECS";
       case "AGT.ECS":
-        return "ECS OS Monitoring";
+        return "ECS";
       case "SYS.AS":
-        return "Auto Scaling";
+        return "AS";
       case "SYS.EVS":
-        return "Elastic Volume Service";
+        return "EVS";
       case "SYS.OBS":
-        return "Object Storage Service";
+        return "OBS";
       case "SYS.SFS":
-        return "Scalable File Service";
+        return "SFS";
       case "SYS.VPC":
-        return "Elastic IP and bandwidth";
+        return "VPC";
       case "SYS.ELB":
-        return "Elastic Load Balance";
+        return "ELB";
       case "SYS.NAT":
-        return "NAT Gateway";
+        return "NAT";
       case "SYS.DMS":
-        return "Distributed Message Service";
+        return "DMS";
       case "SYS.DCS":
-        return "Distributed Cache Service";
+        return "DCS";
       case "SYS.RDS":
-        return "Relational Database Service";
+        return "RDS";
       case "SYS.DDS":
-        return "Document Database Service";
+        return "DDS";
       case "SYS.ES":
-        return "Cloud Search Service";
+        return "ES";
       case "SYS.APIG":
-        return "API Gateway";
+        return "APIG";
       case "SYS.FunctionGraph":
-        return "Function graph";
+        return "FunctionGraph";
 
       default:
         namespace;

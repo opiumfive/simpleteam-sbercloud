@@ -23,6 +23,7 @@ class MainProvider with ChangeNotifier {
   DateTimeRange _range = DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now());
   int _interval = 3600;
   Map<String, List<ChartDataSeries>> chartDataCache = Map();
+  Set<String> excludedMetrics = Set();
 
   List<Metric> get metrics => _metrics;
   List<MetricAlarm> get alarms => _alarms;
