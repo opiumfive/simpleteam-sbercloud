@@ -110,15 +110,15 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var bottomNavigationBarItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: const SberIcon(SberIcon.Dashboard),
+        icon: const SberIcon(SberIcon.DashboardNav),
         label: 'Dashboard',
       ),
       BottomNavigationBarItem(
-        icon: const SberIcon(SberIcon.Alarm),
+        icon: const SberIcon(SberIcon.AlarmsNav),
         label: 'Alarms',
       ),
       BottomNavigationBarItem(
-        icon: const SberIcon(SberIcon.Profile),
+        icon: const SberIcon(SberIcon.ProfileNav),
         label: 'Profile',
       ),
     ];

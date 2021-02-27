@@ -26,7 +26,6 @@ class AlarmsScreen extends StatefulWidget {
 }
 
 class _AlarmsScreenState extends State<AlarmsScreen> {
-
   @override
   Widget build(BuildContext context) {
     return alarms();
@@ -34,9 +33,9 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
 
   Widget alarms() {
     CloudEyeUsecase cloudEyeUsecase =
-    Provider.of<CloudEyeUsecase>(context, listen: false);
+        Provider.of<CloudEyeUsecase>(context, listen: false);
     MainProvider mainProvider =
-    Provider.of<MainProvider>(context, listen: false);
+        Provider.of<MainProvider>(context, listen: false);
 
     Future<bool> getData() async {
       BaseModel<List<MetricAlarm>> alarms = await cloudEyeUsecase.alarmRules();
@@ -58,10 +57,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
             case ConnectionState.none:
             case ConnectionState.waiting:
               return SizedBox(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 1.3,
+                height: MediaQuery.of(context).size.height / 1.3,
                 child: Center(
                   child: PlatformCircularProgressIndicator(),
                 ),
@@ -71,8 +67,8 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                 return Text('fail');
               final List<MetricAlarm> alarms = mainProvider.alarms;
               final List<Resource> resources = mainProvider.resources;
-              final resourceAlarm = resources.firstWhere((res) => res.type == "alarm");
-
+              final resourceAlarm =
+                  resources.firstWhere((res) => res.type == "alarm");
 
               var critical = 0;
               var major = 0;
@@ -106,20 +102,30 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                       DateTime now = DateTime.now();
                       String formattedDate = DateFormat('HH:mm:ss').format(now);
                       final updatedTitle = "Updated date: $formattedDate";
-                      return CardWidget(child: StatBlockView(serviceIcon: SberIcon.Eye12dp, serviceName: "Eye Cloud", sumTitle: "All alarm",date: updatedTitle, data: {"Critical": critical, "Major": major, "Minor": minor, "Info": informational}));
+                      return CardWidget(
+                          child: StatBlockView(
+                              serviceIcon: SberIcon.Eye12dp,
+                              serviceName: "Eye Cloud",
+                              sumTitle: "All alarm",
+                              date: updatedTitle,
+                              data: {
+                            "Critical": critical,
+                            "Major": major,
+                            "Minor": minor,
+                            "Info": informational
+                          }));
                     }
                     final alarm = alarms[index - 1];
                     //return Text(alarm.toJson().toString() + " " + alarm.condition.toJson().toString());
-                    return ListTile(
+                    return CardWidget(
+                      child: ListTile(
                         title: Text(alarm.alarm_name),
-                      subtitle: Text(alarm.metric.getHumanTitle()),
-                      trailing:Text(alarm.getLevelName()),
+                        subtitle: Text(alarm.metric.getHumanTitle()),
+                        trailing: Text(alarm.getLevelName()),
+                      ),
                     );
-                  }
-              );
+                  });
           }
-        }
-    );
+        });
   }
-
 }
