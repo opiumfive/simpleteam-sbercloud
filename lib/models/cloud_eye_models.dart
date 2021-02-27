@@ -36,6 +36,20 @@ class MetricAlarm {
   factory MetricAlarm.fromJson(Map<String, dynamic> json) => _$MetricAlarmFromJson(json);
   Map<String, dynamic> toJson() => _$MetricAlarmToJson(this);
 
+  String getLevelName() {
+    switch(alarm_level) {
+      case 1:
+        return "Critical";
+      case 2:
+        return "Major";
+      case 3:
+        return "Minor";
+      case 4:
+        return "Informational";
+      default:
+        return alarm_level.toString();
+    }
+  }
 }
 
 @JsonSerializable()

@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String password = _password == null ? "" : _password;
 
         if (login.length <= 4 || password.length <= 4) {
-          ToastUtils.showCustomToast(context, "Ошибка данных");
+          ToastUtils.showToastError(context, "Ошибка данных");
           return;
         }
 
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Token loginData = baseModelUser.data;
           if (loginData == null) {
             final String error = baseModelUser.error.getErrorMessage();
-            ToastUtils.showCustomToast(context, "Ошибка входа: $error");
+            ToastUtils.showToastError(context, "Ошибка входа: $error");
             print(error);
 
           } else {

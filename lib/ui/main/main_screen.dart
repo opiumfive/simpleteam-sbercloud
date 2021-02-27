@@ -15,6 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sbercloud_flutter/ui/alarm/alarms_screen.dart';
+import 'package:sbercloud_flutter/ui/common/card_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_button_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
@@ -36,7 +38,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
@@ -112,8 +114,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         label: 'Dashboard',
       ),
       BottomNavigationBarItem(
-        icon: const SberIcon(SberIcon.Configuration),
-        label: 'Configuration',
+        icon: const SberIcon(SberIcon.Alarm),
+        label: 'Alarms',
       ),
       BottomNavigationBarItem(
         icon: const SberIcon(SberIcon.Profile),
@@ -161,7 +163,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                   //padding: EdgeInsets.all(16.0),
                   child: _mainWidget(),
                 )),
-                1: Text('two'),
+                1: AlarmsScreen(),
                 2: ProfileScreen()
               },
               Text('default')),
@@ -249,13 +251,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                   width: 100,
                                   height: 100,
                                   padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Card(
-                                    shadowColor:
-                                        Color(0xFF000000).withOpacity(0.5),
-                                    elevation: 13,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
+                                  child: CardWidget(
                                     child: Stack(
                                       alignment: AlignmentDirectional.center,
                                       children: [
@@ -365,13 +361,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                               SizedBox(
                                 height: 12,
                               ),
-                              Card(
-                                  shadowColor:
-                                      Color(0xFF000000).withOpacity(0.5),
-                                  elevation: 13,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  ),
+                              CardWidget(
                                   child: _dashboardItem(
                                       groups[groups.keys.toList()[index - 1]],
                                       mainProvider,
