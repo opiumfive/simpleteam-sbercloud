@@ -52,7 +52,8 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     final materialTheme = new ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      primarySwatch: Colors.blue,
+      primaryColor: Colors.white,
+      accentColor: Color(0xFF07E897),
       fontFamily: "SB Sans Display"
     );
     final materialDarkTheme = new ThemeData(
