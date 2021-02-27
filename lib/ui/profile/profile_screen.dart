@@ -11,6 +11,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
+import 'package:sbercloud_flutter/ui/profile/widget/info_row_widget.dart';
 
 import '../../const.dart';
 
@@ -27,8 +29,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     User user = Provider.of<UserProvider>(context, listen: false).user;
     AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
+    
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Text('Anfisa Filitova', style: TextStyle(color: Color(0xCC343F48), fontSize: 24.0, fontWeight: FontWeight.bold)),
+            InfoRow("User ID:", icon: SberIcon.UserId, data: user.id, onCopy: onCopy),
+            InfoRow("Account ID:", icon: SberIcon.AccountId, data: user.name, onCopy: onCopy),
+            InfoRow("Account Name:", icon: SberIcon.AccountName, data: user.name,),
+            InfoRow("Email Address:", icon: SberIcon.AccountMail, data: user.name,),
+            InfoRow("Mobile Number:", icon: SberIcon.AccountPhone, data: user.name,)
+          ],
+        ),
+      ),
+    );
+  }
 
-    return Text('');
+  void onCopy(String value) {
+    print("copy:" + value);
   }
 
   showLogoutDialog(BuildContext context, AuthApiUsecase api) {
