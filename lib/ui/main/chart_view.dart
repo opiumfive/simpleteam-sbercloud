@@ -177,7 +177,7 @@ class _ChartViewState extends State<ChartView> {
                 enableAutoIntervalOnZooming: true,
                 majorGridLines: MajorGridLines(width: 0)),
             tooltipBehavior:
-                TooltipBehavior(enable: true, canShowMarker: false),
+                TooltipBehavior(enable: widget.gesturesControl, canShowMarker: false),
             trackballBehavior:
                 TrackballBehavior(enable: widget.gesturesControl),
             zoomPanBehavior: _zoomingBehavior,
@@ -240,7 +240,7 @@ class _ChartViewState extends State<ChartView> {
                   width: 3,
                   dataSource: e.data,
                   xValueMapper: (ChartSampleData sales, _) => sales.x,
-                  yValueMapper: (ChartSampleData sales, _) => sales.yValue,
+                  yValueMapper: (ChartSampleData sales, _) => sales.yValue + (widget.axisVisible ? 0 : 1000000),
                   name: e.title,
                 ))
         .toList();
