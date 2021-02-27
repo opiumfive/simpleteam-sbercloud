@@ -62,11 +62,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     print(userDetail);
     User user = Provider.of<UserProvider>(context, listen: false).user;
+    var avatar;
+    if (userDetail.img_path != null) {
+      avatar = CircleAvatar(
+          radius: 46.0,
+          backgroundColor: Color(0x4AD2D2D2),
+          backgroundImage: NetworkImage(userDetail.img_path.replaceFirst("\$size", "b"))
+      );
+    } else {
+      avatar = Container(height: 92.0, width: 92.0,child: Center(child: SberIcon(SberIcon.Profile, size: 56.0, color: Colors.white,)));
+    }
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 32.0, 0.0, 16.0),
       child: Column(
         children: [
+          Container(
+            decoration: BoxDecoration(
+                color: Color(0xCC343F48),
+                shape: BoxShape.circle
+            ),
+            padding: const EdgeInsets.all(2.0),
+            child: avatar,
+          ),
+          SizedBox(height: 20.0),
           Text(user.name, style: TextStyle(color: Color(0xCC343F48), fontSize: 24.0, fontWeight: FontWeight.bold)),
+          SizedBox(height: 24.0),
           InfoRow("User ID:", icon: SberIcon.UserId, data: userDetail.id, onCopy: onCopy),
           InfoRow("Account ID:", icon: SberIcon.AccountId, data: userDetail.domain_id, onCopy: onCopy),
           InfoRow("Account Name:", icon: SberIcon.AccountName, data: userDetail.name,),
