@@ -53,6 +53,26 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<UserDetailResponse> user(token, user_id) async {
+    ArgumentError.checkNotNull(token, 'token');
+    ArgumentError.checkNotNull(user_id, 'user_id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v3.0/OS-USER/users/$user_id',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{r'X-Auth-Token': token},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = UserDetailResponse.fromJson(_result.data);
+    return value;
+  }
+
+  @override
   Future<MetricsResponse> eyeMetrics(token, project_id) async {
     ArgumentError.checkNotNull(token, 'token');
     ArgumentError.checkNotNull(project_id, 'project_id');

@@ -23,6 +23,48 @@ class User {
 }
 
 @JsonSerializable()
+class UserDetailResponse {
+  UserDetail user;
+
+  UserDetailResponse({this.user});
+
+  factory UserDetailResponse.fromJson(Map<String, dynamic> json) => _$UserDetailResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$UserDetailResponseToJson(this);
+
+}
+
+@JsonSerializable()
+class UserDetail {
+  String id;
+  String name;
+  String domain_id;
+  String img_path;
+  String email;
+  String phone;
+
+  UserDetail({this.id, this.name, this.domain_id, this.img_path, this.email, this.phone});
+
+  factory UserDetail.fromJson(Map<String, dynamic> json) => _$UserDetailFromJson(json);
+  Map<String, dynamic> toJson() => _$UserDetailToJson(this);
+
+  @override
+  String toString() {
+    return 'UserDetail{id: $id, name: $name, domain_id: $domain_id, img_path: $img_path, email: $email, phone: $phone}';
+  }
+}
+
+@JsonSerializable()
+class UserResponse {
+  List<User> users;
+
+  UserResponse({this.users});
+
+  factory UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$UserResponseToJson(this);
+
+}
+
+@JsonSerializable()
 class UserProject {
   String id;
   String name;

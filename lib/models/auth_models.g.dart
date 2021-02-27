@@ -18,6 +18,54 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'name': instance.name,
     };
 
+UserDetailResponse _$UserDetailResponseFromJson(Map<String, dynamic> json) {
+  return UserDetailResponse(
+    user: json['user'] == null
+        ? null
+        : UserDetail.fromJson(json['user'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$UserDetailResponseToJson(UserDetailResponse instance) =>
+    <String, dynamic>{
+      'user': instance.user,
+    };
+
+UserDetail _$UserDetailFromJson(Map<String, dynamic> json) {
+  return UserDetail(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    domain_id: json['domain_id'] as String,
+    img_path: json['img_path'] as String,
+    email: json['email'] as String,
+    phone: json['phone'] as String,
+  );
+}
+
+Map<String, dynamic> _$UserDetailToJson(UserDetail instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'domain_id': instance.domain_id,
+      'img_path': instance.img_path,
+      'email': instance.email,
+      'phone': instance.phone,
+    };
+
+UserResponse _$UserResponseFromJson(Map<String, dynamic> json) {
+  return UserResponse(
+    users: (json['users'] as List)
+        ?.map(
+            (e) => e == null ? null : User.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
+    <String, dynamic>{
+      'users': instance.users,
+    };
+
 UserProject _$UserProjectFromJson(Map<String, dynamic> json) {
   return UserProject(
     id: json['id'] as String,

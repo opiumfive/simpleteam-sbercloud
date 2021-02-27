@@ -65,8 +65,38 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     print("onAlert");
   }
 
-  void onLogout() {
-    print("onLogout");
+  void showLogoutDialog(BuildContext context, AuthApiUsecase api) {
+    // set up the buttons
+    PlatformDialogAction cancelButton = PlatformDialogAction(
+      child: Text("Отмена"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    PlatformDialogAction continueButton = PlatformDialogAction(
+      child: Text("Да"),
+      onPressed:  () {
+        UserPreferences().removeUser();
+        Provider.of<UserProvider>(context, listen: false).setUser(new User());
+        Navigator.pushNamedAndRemoveUntil(context, LOGIN_ROUTE,ModalRoute.withName('/auth'),);
+      },
+    );
+    // set up the AlertDialog
+    PlatformAlertDialog alert = PlatformAlertDialog(
+      title: Text("Выход из аккаунта"),
+      content: Text("Вы действительно хотите выйти?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -90,6 +120,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     final label = bottomNavigationBarItems[_currentIndex].label;
     final title = Text(label, style: TextStyle(color: Color(0xFF343F48), fontSize: 27.0, fontWeight: FontWeight.bold));
 
+    AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
+
     var actions = <Widget>[];
     switch (_currentIndex) {
       case 0:
@@ -99,7 +131,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       case 1:
         break;
       case 2:
-        actions.add(SberIconButton(SberIcon.Logout, onPressed: onLogout));
+        actions.add(SberIconButton(SberIcon.Logout, onPressed: () => {
+          showLogoutDialog(context, api)
+        }));
         break;
     }
 

@@ -7,11 +7,19 @@ import 'package:sbercloud_flutter/ui/main/chart_data.dart';
 
 class UserProvider with ChangeNotifier {
   User _user = new User();
+  UserDetail _detail;
 
   User get user => _user;
 
+  UserDetail get detail => _detail;
+
   void setUser(User user) {
     _user = user;
+    notifyListeners();
+  }
+
+  void setDetails(UserDetail detail) {
+    _detail = detail;
     notifyListeners();
   }
 }
