@@ -104,7 +104,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(title: title, actions: actions,),
-        backgroundColor: Colors.white,
         body: PageTransitionSwitcher(
           child: case2(
               _currentIndex,
