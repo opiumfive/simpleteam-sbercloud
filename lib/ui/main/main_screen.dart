@@ -13,6 +13,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sbercloud_flutter/ui/main/widget/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:animations/animations.dart';
@@ -60,16 +61,16 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
     var bottomNavigationBarItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: const Icon(Icons.add_comment),
-        label: 'One',
+        icon: const SberIcon(SberIcon.Dashboard),
+        label: 'Dashboard',
       ),
       BottomNavigationBarItem(
-        icon: const Icon(Icons.calendar_today),
-        label: 'Two',
+        icon: const SberIcon(SberIcon.Configuration),
+        label: 'Configuration',
       ),
       BottomNavigationBarItem(
-        icon: const Icon(Icons.account_circle),
-        label: 'Three',
+        icon: const SberIcon(SberIcon.Settings),
+        label: 'Settings',
       ),
     ];
 
@@ -94,6 +95,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Color(0xBF343F48),
+          unselectedItemColor: Color(0xFFD2D2D2),
           showUnselectedLabels: true,
           items: bottomNavigationBarItems,
           currentIndex: _currentIndex,
