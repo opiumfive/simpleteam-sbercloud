@@ -86,9 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () => _switchPlatform(context),
                   ),
                   SizedBox(height: 18.0),
-                  SberTextField(onChanged: (value) => _login = value, placeholder: "Логин", text: _login),
+                  SberTextField(onChanged: (value) => _login = value, placeholder: "Username", text: _login),
                   SizedBox(height: 12.0),
-                  SberTextField(onChanged: (password) => _password = password, placeholder: "Пароль", text: _password, isPassword: true),
+                  SberTextField(onChanged: (password) => _password = password, placeholder: "Password", text: _password, isPassword: true),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
@@ -104,9 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 32.0),
                   auth.loggedInStatus == Status.Authenticating ?  PlatformCircularProgressIndicator() :
-                  SberButton(text: "Войти", onPressed: doLogin),
+                  SberButton(text: "Log in", onPressed: doLogin),
                   SizedBox(height: 12.0),
-                  SberButton(text: "Регистрация", onPressed: doLogin, style: SberButtonStyle.Bordered),
+                  SberButton(text: "Registration", onPressed: doLogin, style: SberButtonStyle.Bordered),
                   Spacer(),
                 ],
               ),
