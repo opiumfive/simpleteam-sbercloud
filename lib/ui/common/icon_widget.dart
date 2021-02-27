@@ -8,10 +8,11 @@ class SberIcon extends StatelessWidget {
 
   //Nav
   static const Back = "ic_back.svg";
-  static const Configuration = "ic_configuration.svg";
-  static const Dashboard = "ic_dashboard.svg";
-  static const Settings = "ic_settings.svg";
-  static const Profile = "ic_profile.svg";
+  static const AlarmsNav = "ic_alarms.svg";
+  static const ProfileNav = "ic_profile_menu.svg";
+  static const ConfigurationNav = "ic_configuration.svg";
+  static const DashboardNav = "ic_dashboard.svg";
+  static const SettingsNav = "ic_settings.svg";
 
   //Dashboard
   static const Alarm = "ic_alarm.svg";
@@ -24,6 +25,7 @@ class SberIcon extends StatelessWidget {
   static const Plus40dp = "ic_plus_40dp.svg";
 
   //Profile
+  static const Profile = "ic_profile.svg";
   static const Logout = "ic_log_out.svg";
   static const Clipboard = "ic_clipboard.svg";
   static const UserId = "ic_user_id.svg";
