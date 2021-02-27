@@ -53,6 +53,7 @@ class _AppState extends State<App> {
     final materialTheme = new ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primarySwatch: Colors.blue,
+      fontFamily: "SB Sans Display"
     );
     final materialDarkTheme = new ThemeData(
         brightness: Brightness.dark,

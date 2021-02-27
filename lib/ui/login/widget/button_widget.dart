@@ -65,7 +65,7 @@ class _SberButton extends State<SberButton> {
         shape: shape,
         child: Container(
           width: double.infinity,
-          height: 40.0,
+          height: 48.0,
           child: Center(child: Text(widget.text, style: textStyle)),
         ),
         color: filledColor,

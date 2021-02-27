@@ -17,10 +17,10 @@ class SberTextField extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SearchFieldWidget createState() => _SearchFieldWidget();
+  _SberTextField createState() => _SberTextField();
 }
 
-class _SearchFieldWidget extends State<SberTextField> {
+class _SberTextField extends State<SberTextField> {
   final _controller = TextEditingController();
   bool _isObscure = false;
 
@@ -40,38 +40,43 @@ class _SearchFieldWidget extends State<SberTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformTextField(
-      keyboardType: TextInputType.text,
-      autocorrect: false,
-      obscureText: _isObscure,
-      onChanged: widget.onChanged,
-      style: _textStyle,
-      cupertino: (_, __) => CupertinoTextFieldData(
+    return SizedBox(
+      height: 48.0,
+      child: PlatformTextField(
+        textAlignVertical: TextAlignVertical.center,
+        keyboardType: TextInputType.text,
+        autocorrect: false,
+        obscureText: _isObscure,
+        onChanged: widget.onChanged,
+        style: _textStyle,
+        cupertino: (_, __) => CupertinoTextFieldData(
+            controller: _controller,
+            style: TextStyle(color: Colors.black),
+            placeholder: widget.placeholder),
+        material: (_, __) => MaterialTextFieldData(
           controller: _controller,
-          style: TextStyle(color: Colors.black),
-          placeholder: widget.placeholder),
-      material: (_, __) => MaterialTextFieldData(
-        controller: _controller,
-        decoration: InputDecoration(
-            hintText: widget.placeholder,
-            hintStyle: _placeHolderStyle,
-            fillColor: Color(0x75E9E9E9),
-            filled: true,
-            border: _border,
-            enabledBorder: _border,
-            focusedBorder: _border,
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    icon: Icon(
-                        _isObscure ? Icons.visibility : Icons.visibility_off,
-                        color: Color(0xFFdD2D2D2)),
-                    onPressed: () {
-                      setState(() {
-                        this._isObscure = !this._isObscure;
-                      });
-                    },
-                  )
-                : null),
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
+              hintText: widget.placeholder,
+              hintStyle: _placeHolderStyle,
+              fillColor: Color(0x75E9E9E9),
+              filled: true,
+              border: _border,
+              enabledBorder: _border,
+              focusedBorder: _border,
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      icon: Icon(
+                          _isObscure ? Icons.visibility : Icons.visibility_off,
+                          color: Color(0xFFdD2D2D2)),
+                      onPressed: () {
+                        setState(() {
+                          this._isObscure = !this._isObscure;
+                        });
+                      },
+                    )
+                  : null),
+        ),
       ),
     );
   }
