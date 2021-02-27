@@ -13,6 +13,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
+import 'package:sbercloud_flutter/ui/common/stat_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/widget/info_row_widget.dart';
 import 'package:sbercloud_flutter/ui/toast_utils.dart';
 
@@ -89,9 +90,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(height: 24.0),
           InfoRow("User ID:", icon: SberIcon.UserId, data: userDetail.id, onCopy: onCopy),
           InfoRow("Account ID:", icon: SberIcon.AccountId, data: userDetail.domain_id, onCopy: onCopy),
-          InfoRow("Account Name:", icon: SberIcon.AccountName, data: userDetail.name,),
-          InfoRow("Email Address:", icon: SberIcon.AccountMail, data: userDetail.email,),
-          InfoRow("Mobile Number:", icon: SberIcon.AccountPhone, data: userDetail.phone,)
+          InfoRow("Account Name:", icon: SberIcon.AccountName, data: userDetail.name),
+          InfoRow("Email Address:", icon: SberIcon.AccountMail, data: userDetail.email),
+          InfoRow("Mobile Number:", icon: SberIcon.AccountPhone, data: userDetail.phone),
+          Text("Test"),
+          StatBlockView(serviceIcon: SberIcon.Eye12dp, serviceName: "Eye Cloud", sumTitle: "All alarm",date: "Updated date: 15:37:19", data: {"Critical": 1, "Major": 2, "Minor:": 20, "Info:3": 45},)
         ],
       ),
     );
