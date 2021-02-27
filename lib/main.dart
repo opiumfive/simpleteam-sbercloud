@@ -4,6 +4,7 @@ import 'package:sbercloud_flutter/api/usecase/application_performance_usecase.da
 import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_trace_usecase.dart';
+import 'package:sbercloud_flutter/api/usecase/profile_usecase.dart';
 import 'package:sbercloud_flutter/const.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -87,6 +88,7 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (_) => CloudTraceUsecase()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => MainProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileUsecase())
       ],
       child: Theme(
         data:

@@ -26,7 +26,7 @@ class InfoRow extends StatelessWidget {
     return Container(
       // color: Color.fromARGB(255, r.nextInt(255), r.nextInt(255), r.nextInt(255)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0 ,16.0),
         child: Container(
           height: 32.0,
           child: Row(

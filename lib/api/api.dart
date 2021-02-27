@@ -50,6 +50,9 @@ abstract class RestClient {
 }
    */
 
+  @GET("/v3.0/OS-USER/users/{user_id}")
+  Future<UserDetailResponse> user(@Header("X-Auth-Token") String token, @Path() String user_id);
+
   @GET("/V1.0/{project_id}/metrics")
   Future<MetricsResponse> eyeMetrics(@Header("X-Auth-Token") String token, @Path() String project_id);
 
