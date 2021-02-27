@@ -69,7 +69,7 @@ class _ChartViewState extends State<ChartView> {
             .metricData(widget.metrics[i], widget.mainProvider.range,
                 widget.mainProvider.interval,
                 filter: "average");
-        if (resp != null && resp.data != null) {
+        if (resp != null && resp.data != null && resp.data.isNotEmpty) {
           List<ChartSampleData> data = resp.data
               .map<ChartSampleData>((e) => ChartSampleData(
                   x: DateTime.fromMillisecondsSinceEpoch(e.timestamp),
@@ -136,9 +136,7 @@ class _ChartViewState extends State<ChartView> {
             Visibility(child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
               SvgPicture.asset('assets/images/ic_arrow_up.svg'),
               SizedBox(width: 3,),
-              Text(
-                widget.chartData.length > 1 ? "${widget.chartData[1].data.last.yValue} ${widget.chartData[1].unit}" : "",
-
+              Text(widget.chartData.length > 1 ? "${widget.chartData[1].data.last.yValue} ${widget.chartData[1].unit}" : "",
                 style: TextStyle(
                     color: Color(0xFF343F48),
                     fontSize: 11,
@@ -146,17 +144,17 @@ class _ChartViewState extends State<ChartView> {
               ),
             ],), visible: widget.metrics.length > 1,),
 
-            Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
+            Visibility(child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
               SvgPicture.asset('assets/images/ic_arrow_down.svg'),
               SizedBox(width: 3,),
-              Text(
-                 "${widget.chartData[0].data.last.yValue} ${widget.chartData[0].unit}" ,
+              Text(widget.chartData.length > 0 ?
+                 "${widget.chartData[0].data.last.yValue} ${widget.chartData[0].unit}" : "" ,
                 style: TextStyle(
                     color: Color(0xFF343F48),
                     fontSize: 11,
                     fontWeight: FontWeight.bold),
               ),
-            ],)
+            ],), visible: widget.chartData.length > 0,)
 
           ],
         ),),
@@ -171,7 +169,7 @@ class _ChartViewState extends State<ChartView> {
             ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
           ),
           height: 90,
-          child: SfCartesianChart(
+          child: widget.chartData.length > 0 ? SfCartesianChart(
             plotAreaBorderWidth: 0,
             //title: ChartTitle(text: widget.chartData.first.title),
             primaryXAxis: DateTimeAxis(
@@ -193,7 +191,7 @@ class _ChartViewState extends State<ChartView> {
               majorGridLines: MajorGridLines(width: 0),
             ),
             series: getTimeSeries(widget.chartData),
-          ),
+          ) : Center(child: Text("No data"),)
         ),
         Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
