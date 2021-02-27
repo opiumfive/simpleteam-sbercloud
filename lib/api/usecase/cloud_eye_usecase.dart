@@ -40,6 +40,46 @@ class CloudEyeUsecase with ChangeNotifier {
     }
   }
 
+  Future<BaseModel<List<Resource>>> quotas() async {
+    QuotasResponse response;
+    UserPreferences userPreferences = UserPreferences();
+    String token = await userPreferences.getToken();
+    UserProject project = await userPreferences.getProject();
+    try {
+      response = await restClient.eyeQuotas(token, project.id);
+
+      if (response != null && response.quotas != null && response.quotas.resources != null) {
+        return BaseModel()..data = response.quotas.resources;
+      } else {
+        return BaseModel()..data = List.empty();
+      }
+
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return BaseModel()..setException(ServerError.withError(error: error));
+    }
+  }
+
+  Future<BaseModel<List<MetricAlarm>>> alarmRules() async {
+    AlarmRulesResponse response;
+    UserPreferences userPreferences = UserPreferences();
+    String token = await userPreferences.getToken();
+    UserProject project = await userPreferences.getProject();
+    try {
+      response = await restClient.eyeAlarmRules(token, project.id);
+
+      if (response != null && response.metric_alarms != null) {
+        return BaseModel()..data = response.metric_alarms;
+      } else {
+        return BaseModel()..data = List.empty();
+      }
+
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return BaseModel()..setException(ServerError.withError(error: error));
+    }
+  }
+
   // filter is max/min/average/sum/variance
   Future<BaseModel<List<Datapoint>>> metricData(Metric metric, DateTimeRange dateTimeRange, int periodSec, {String filter = "min"}) async {
     MetricDataResponse response;

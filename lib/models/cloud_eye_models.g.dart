@@ -6,6 +6,117 @@ part of 'cloud_eye_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+AlarmRulesResponse _$AlarmRulesResponseFromJson(Map<String, dynamic> json) {
+  return AlarmRulesResponse(
+    meta_data: json['meta_data'] == null
+        ? null
+        : Metadata.fromJson(json['meta_data'] as Map<String, dynamic>),
+    metric_alarms: (json['metric_alarms'] as List)
+        ?.map((e) =>
+            e == null ? null : MetricAlarm.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$AlarmRulesResponseToJson(AlarmRulesResponse instance) =>
+    <String, dynamic>{
+      'metric_alarms': instance.metric_alarms,
+      'meta_data': instance.meta_data,
+    };
+
+MetricAlarm _$MetricAlarmFromJson(Map<String, dynamic> json) {
+  return MetricAlarm()
+    ..alarm_name = json['alarm_name'] as String
+    ..alarm_description = json['alarm_description'] as String
+    ..metric = json['metric'] == null
+        ? null
+        : Metric.fromJson(json['metric'] as Map<String, dynamic>)
+    ..alarm_enabled = json['alarm_enabled'] as bool
+    ..alarm_level = json['alarm_level'] as int
+    ..alarm_action_enabled = json['alarm_action_enabled'] as bool
+    ..alarm_id = json['alarm_id'] as String
+    ..update_time = json['update_time'] as int
+    ..alarm_state = json['alarm_state'] as String
+    ..condition = json['condition'] == null
+        ? null
+        : Condition.fromJson(json['condition'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$MetricAlarmToJson(MetricAlarm instance) =>
+    <String, dynamic>{
+      'alarm_name': instance.alarm_name,
+      'alarm_description': instance.alarm_description,
+      'metric': instance.metric,
+      'alarm_enabled': instance.alarm_enabled,
+      'alarm_level': instance.alarm_level,
+      'alarm_action_enabled': instance.alarm_action_enabled,
+      'alarm_id': instance.alarm_id,
+      'update_time': instance.update_time,
+      'alarm_state': instance.alarm_state,
+      'condition': instance.condition,
+    };
+
+Condition _$ConditionFromJson(Map<String, dynamic> json) {
+  return Condition()
+    ..period = json['period'] as int
+    ..filter = json['filter'] as String
+    ..comparison_operator = json['comparison_operator'] as String
+    ..value = json['value'] as int
+    ..unit = json['unit'] as String
+    ..count = json['count'] as int;
+}
+
+Map<String, dynamic> _$ConditionToJson(Condition instance) => <String, dynamic>{
+      'period': instance.period,
+      'filter': instance.filter,
+      'comparison_operator': instance.comparison_operator,
+      'value': instance.value,
+      'unit': instance.unit,
+      'count': instance.count,
+    };
+
+QuotasResponse _$QuotasResponseFromJson(Map<String, dynamic> json) {
+  return QuotasResponse(
+    quotas: json['quotas'] == null
+        ? null
+        : Quotas.fromJson(json['quotas'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$QuotasResponseToJson(QuotasResponse instance) =>
+    <String, dynamic>{
+      'quotas': instance.quotas,
+    };
+
+Quotas _$QuotasFromJson(Map<String, dynamic> json) {
+  return Quotas(
+    resources: (json['resources'] as List)
+        ?.map((e) =>
+            e == null ? null : Resource.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$QuotasToJson(Quotas instance) => <String, dynamic>{
+      'resources': instance.resources,
+    };
+
+Resource _$ResourceFromJson(Map<String, dynamic> json) {
+  return Resource(
+    type: json['type'] as String,
+    unit: json['unit'] as String,
+    used: json['used'] as int,
+    quota: json['quota'] as int,
+  );
+}
+
+Map<String, dynamic> _$ResourceToJson(Resource instance) => <String, dynamic>{
+      'type': instance.type,
+      'unit': instance.unit,
+      'used': instance.used,
+      'quota': instance.quota,
+    };
+
 MetricsResponse _$MetricsResponseFromJson(Map<String, dynamic> json) {
   return MetricsResponse(
     metrics: (json['metrics'] as List)

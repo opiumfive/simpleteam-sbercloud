@@ -7,6 +7,90 @@ import '../const.dart';
 part 'cloud_eye_models.g.dart';
 
 @JsonSerializable()
+class AlarmRulesResponse {
+  List<MetricAlarm> metric_alarms;
+  Metadata meta_data;
+
+  AlarmRulesResponse({this.meta_data, this.metric_alarms});
+
+  factory AlarmRulesResponse.fromJson(Map<String, dynamic> json) => _$AlarmRulesResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$AlarmRulesResponseToJson(this);
+
+}
+
+@JsonSerializable()
+class MetricAlarm {
+  String alarm_name;
+  String alarm_description;
+  Metric metric;
+  bool alarm_enabled;
+  int alarm_level;
+  bool alarm_action_enabled;
+  String alarm_id;
+  int update_time;
+  String alarm_state;
+  Condition condition;
+
+  MetricAlarm();
+
+  factory MetricAlarm.fromJson(Map<String, dynamic> json) => _$MetricAlarmFromJson(json);
+  Map<String, dynamic> toJson() => _$MetricAlarmToJson(this);
+
+}
+
+@JsonSerializable()
+class Condition {
+  int period;
+  String filter;
+  String comparison_operator;
+  int value;
+  String unit;
+  int count;
+
+  Condition();
+
+  factory Condition.fromJson(Map<String, dynamic> json) => _$ConditionFromJson(json);
+  Map<String, dynamic> toJson() => _$ConditionToJson(this);
+
+}
+
+@JsonSerializable()
+class QuotasResponse {
+  Quotas quotas;
+
+  QuotasResponse({this.quotas});
+
+  factory QuotasResponse.fromJson(Map<String, dynamic> json) => _$QuotasResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$QuotasResponseToJson(this);
+
+}
+
+@JsonSerializable()
+class Quotas {
+  List<Resource> resources;
+
+  Quotas({this.resources});
+
+  factory Quotas.fromJson(Map<String, dynamic> json) => _$QuotasFromJson(json);
+  Map<String, dynamic> toJson() => _$QuotasToJson(this);
+
+}
+
+@JsonSerializable()
+class Resource {
+  String type;
+  String unit;
+  int used;
+  int quota;
+
+  Resource({this.type, this.unit, this.used, this.quota});
+
+  factory Resource.fromJson(Map<String, dynamic> json) => _$ResourceFromJson(json);
+  Map<String, dynamic> toJson() => _$ResourceToJson(this);
+
+}
+
+@JsonSerializable()
 class MetricsResponse {
   List<Metric> metrics;
   Metadata meta_data;

@@ -8,8 +8,10 @@ class ChartView extends StatefulWidget {
 
   List<ChartSampleData> chartData;
   String title;
+  bool axisVisible = true;
+  bool gesturesControl = true;
 
-  ChartView({Key key, this.title, this.chartData}) : super(key: key);
+  ChartView({Key key, this.title, this.chartData, this.axisVisible, this.gesturesControl}) : super(key: key);
 
   @override
   _ChartViewState createState() => _ChartViewState();
@@ -36,43 +38,49 @@ class _ChartViewState extends State<ChartView> {
   @override
   Widget build(BuildContext context) {
     _zoomingBehavior = ZoomPanBehavior(
-        enablePinching: true,
+        enablePinching: widget.gesturesControl,
         zoomMode: _zoomModeType,
-        enablePanning: true,
+        enablePanning: widget.gesturesControl,
         enableMouseWheelZooming: false);
 
-    return SfCartesianChart(
-      plotAreaBorderWidth: 0,
-      title: ChartTitle(text: widget.title),
-      primaryXAxis: DateTimeAxis(
-          enableAutoIntervalOnZooming: true,
-          majorGridLines: MajorGridLines(width: 0)),
-      tooltipBehavior: TooltipBehavior(enable: true, canShowMarker: false),
-      trackballBehavior: TrackballBehavior(enable: true),
-      zoomPanBehavior: _zoomingBehavior,
-      primaryYAxis: NumericAxis(
-        enableAutoIntervalOnZooming: true,
-        labelFormat: '{value}',
-        axisLine: AxisLine(width: 0),
-        majorGridLines: MajorGridLines(width: 0),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: <Color>[
+          Color.fromARGB(15, 7,232,151),
+          Color.fromARGB(0, 7,232,151)
+        ], stops: <double>[
+          0.0,
+          1.0
+        ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
       ),
-      series: getTimeSeries(widget.chartData),
+      child: SfCartesianChart(
+        plotAreaBorderWidth: 0,
+        title: ChartTitle(text: widget.title),
+        primaryXAxis: DateTimeAxis(
+          isVisible: widget.axisVisible,
+            enableAutoIntervalOnZooming: true,
+            majorGridLines: MajorGridLines(width: 0)),
+        tooltipBehavior: TooltipBehavior(enable: true, canShowMarker: false),
+        trackballBehavior: TrackballBehavior(enable: widget.gesturesControl),
+        zoomPanBehavior: _zoomingBehavior,
+        backgroundColor: Colors.transparent,
+        primaryYAxis: NumericAxis(
+          isVisible: widget.axisVisible,
+          enableAutoIntervalOnZooming: true,
+          labelFormat: '{value}',
+          axisLine: AxisLine(width: 0),
+          majorGridLines: MajorGridLines(width: 0),
+        ),
+        series: getTimeSeries(widget.chartData),
+      ),
     );
   }
 
   List<ChartSeries<ChartSampleData, DateTime>> getTimeSeries(List<ChartSampleData> chartData) {
     return <ChartSeries<ChartSampleData, DateTime>>[
-      SplineAreaSeries<ChartSampleData, DateTime>(
-        borderColor: const Color.fromRGBO(0, 156, 144, 1),
-        gradient: const LinearGradient(colors: <Color>[
-          Colors.white,
-          Color.fromRGBO(255, 232, 149, 0.9)
-        ], stops: <double>[
-          0.2,
-          0.9
-        ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-        borderWidth: 2,
-        borderDrawMode: BorderDrawMode.top,
+      SplineSeries<ChartSampleData, DateTime>(
+        color: const Color.fromRGBO(52, 63, 72, 84),
+        width: 5,
         dataSource: chartData,
         xValueMapper: (ChartSampleData sales, _) => sales.x,
         yValueMapper: (ChartSampleData sales, _) => sales.yValue,

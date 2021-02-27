@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
@@ -32,7 +33,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
-
   int _currentIndex = 0;
 
   @override
@@ -58,7 +58,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
     User user = Provider.of<UserProvider>(context, listen: false).user;
-    MainProvider mainProvider = Provider.of<MainProvider>(context, listen: false);
+    MainProvider mainProvider =
+        Provider.of<MainProvider>(context, listen: false);
 
     var bottomNavigationBarItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
@@ -76,17 +77,20 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     ];
 
     return Scaffold(
-        backgroundColor: Colors.white,//Color.fromARGB(255, 21, 50, 67),
+        backgroundColor: Colors.white, //Color.fromARGB(255, 21, 50, 67),
         body: PageTransitionSwitcher(
-          child: case2(_currentIndex, {
-            0: Container(
-              key: UniqueKey(),
-              padding: EdgeInsets.all(16.0),
-              child: _mainWidget(),
-            ),
-            1: Text('two'),
-            2: ProfileScreen()
-          }, Text('default')),
+          child: case2(
+              _currentIndex,
+              {
+                0: Center(child: Container(
+                  key: UniqueKey(),
+                  //padding: EdgeInsets.all(16.0),
+                  child: _mainWidget(),
+                )),
+                1: Text('two'),
+                2: ProfileScreen()
+              },
+              Text('default')),
           transitionBuilder: (child, animation, secondaryAnimation) {
             return FadeThroughTransition(
               child: child,
@@ -115,8 +119,10 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Widget _mainWidget() {
     // test widget
-    CloudEyeUsecase cloudEyeUsecase = Provider.of<CloudEyeUsecase>(context, listen: false);
-    MainProvider mainProvider = Provider.of<MainProvider>(context, listen: false);
+    CloudEyeUsecase cloudEyeUsecase =
+        Provider.of<CloudEyeUsecase>(context, listen: false);
+    MainProvider mainProvider =
+        Provider.of<MainProvider>(context, listen: false);
     Future<List<Datapoint>> datapoints() async {
       BaseModel<List<Metric>> metrics = await cloudEyeUsecase.metrics();
       if (metrics != null && metrics.data != null) {
@@ -125,11 +131,96 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         Metric metric = metrics.data[2];
         BaseModel<List<Datapoint>> data = await cloudEyeUsecase.metricData(
             metric,
-            DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now()), 3600, filter: "average"
-        );
+            DateTimeRange(
+                start: DateTime.now().subtract(Duration(hours: 24)),
+                end: DateTime.now()),
+            3600,
+            filter: "average");
         return data.data;
       }
     }
+
+    return FutureBuilder(
+        future: cloudEyeUsecase.metrics(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.3,
+                child: Center(
+                  child: PlatformCircularProgressIndicator(),
+                ),
+              );
+            default:
+              if (snapshot.hasError || snapshot.data == null)
+                return Text('fail');
+              final List<Metric> metrics = snapshot.data.data;
+
+              return CarouselSlider.builder(
+                options: CarouselOptions(
+                    height: 350,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                    enlargeCenterPage: true,
+                    scrollDirection: Axis.horizontal),
+                itemCount: metrics.length,
+                itemBuilder: (ctx, index, realIdx) {
+                  return Container(
+                    child: FutureBuilder(
+                        future: cloudEyeUsecase.metricData(metrics[index],
+                            DateTimeRange(
+                            start: DateTime.now().subtract(Duration(hours: 24)),
+                            end: DateTime.now()),
+                            3600,
+                            filter: "average"),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                            case ConnectionState.waiting:
+                              return SizedBox(
+                                height: MediaQuery.of(context).size.height / 1.3,
+                                child: Center(
+                                  child: PlatformCircularProgressIndicator(),
+                                ),
+                              );
+                            default:
+                              if (snapshot.hasError || snapshot.data == null)
+                                return Text('fail');
+                              final List<ChartSampleData> chartData = snapshot.data.data
+                                  .map<ChartSampleData>((e) => ChartSampleData(
+                                  x: DateTime.fromMillisecondsSinceEpoch(
+                                      (e as Datapoint).timestamp),
+                                  yValue: (e as Datapoint).getData()))
+                                  .toList();
+
+                              if (chartData.length == 1) chartData.add(chartData[0]);
+
+                              return Card(
+                                  shadowColor: Color(0xFF234395).withOpacity(0.2),
+                                  elevation: 15,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(metrics[index].namespace + " " + metrics[index].metric_name + " " + metrics[index].unit),
+                                        ChartView(
+                                          chartData: chartData,
+                                          axisVisible: false,
+                                          gesturesControl: false,
+                                        ),
+                                      ]));
+                          }
+                        })
+                  );
+                },
+              );
+          }
+        });
+
+
 
     return FutureBuilder(
         future: datapoints(),
@@ -144,29 +235,31 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                 ),
               );
             default:
-              if (snapshot.hasError || snapshot.data == null) return Text('fail');
+              if (snapshot.hasError || snapshot.data == null)
+                return Text('fail');
               final List<ChartSampleData> chartData = snapshot.data
-                  .map<ChartSampleData>((e) => ChartSampleData(x: DateTime.fromMillisecondsSinceEpoch((e as Datapoint).timestamp), yValue: (e as Datapoint).getData())).toList();
-              
+                  .map<ChartSampleData>((e) => ChartSampleData(
+                      x: DateTime.fromMillisecondsSinceEpoch(
+                          (e as Datapoint).timestamp),
+                      yValue: (e as Datapoint).getData()))
+                  .toList();
+
               return Center(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Card(
-                          child: ChartView(chartData: chartData),
-                          shadowColor: Color(0xFF234395).withOpacity(0.2),
-                          elevation: 15,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-
-                        ChartView(chartData: chartData).addNeumorphism(
-                          topShadowColor: Colors.white,
-                          bottomShadowColor: Color(0xFF234395).withOpacity(0.2),
-                        )
-                      ])
-              );
+                    Card(
+                      child: ChartView(
+                        chartData: chartData,
+                        axisVisible: false,
+                      ),
+                      shadowColor: Color(0xFF234395).withOpacity(0.2),
+                      elevation: 15,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    )
+                  ]));
           }
         });
 
@@ -220,8 +313,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       ChartSampleData(x: DateTime(2018, 11, 1), yValue: 1.14),
       ChartSampleData(x: DateTime(2018, 12, 1), yValue: 1.15)
     ];
-    
-    
   }
 }
 

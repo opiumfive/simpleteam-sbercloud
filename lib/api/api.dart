@@ -53,6 +53,12 @@ abstract class RestClient {
   @GET("/V1.0/{project_id}/metrics")
   Future<MetricsResponse> eyeMetrics(@Header("X-Auth-Token") String token, @Path() String project_id);
 
+  @GET("/V1.0/{project_id}/quotas")
+  Future<QuotasResponse> eyeQuotas(@Header("X-Auth-Token") String token, @Path() String project_id);
+
+  @GET("/V1.0/{project_id}/alarms")
+  Future<AlarmRulesResponse> eyeAlarmRules(@Header("X-Auth-Token") String token, @Path() String project_id);
+
   @GET("/V1.0/{project_id}/metric-data")
   Future<MetricDataResponse> eyeMetricData(@Header("X-Auth-Token") String token, @Path() String project_id, @Queries() Map<String, dynamic> queries);
 }
