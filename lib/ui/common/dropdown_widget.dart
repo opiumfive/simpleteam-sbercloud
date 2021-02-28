@@ -13,7 +13,7 @@ class Dropdown extends StatefulWidget {
         this.values,
         this.value,
         this.onChanged,
-        this.fontSize = 11.0
+        this.fontSize = 14.0
       })
       : super(key: key);
 
@@ -37,7 +37,7 @@ class _DropdownState extends State<Dropdown> {
         underline: Container(),
         items: items,
         icon: SberIcon(SberIcon.Dropdown),
-        iconSize: 16.0,
+        iconSize: 18.0,
         onChanged: widget.onChanged
     );
   }

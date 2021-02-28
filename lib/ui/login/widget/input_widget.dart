@@ -24,9 +24,9 @@ class _SberTextField extends State<SberTextField> {
   final _controller = TextEditingController();
   bool _isObscure = false;
 
-  final _textStyle = TextStyle(color: Color(0xBF000000), fontSize: 14.0);
-  final _placeHolderStyle = TextStyle(color: Color(0x40060607), fontSize: 14.0);
-  final _labelStyle = TextStyle(color: Color(0xFF343F48), fontSize: 8.0);
+  final _textStyle = TextStyle(color: Color(0xBF000000), fontSize: 16.0);
+  final _placeHolderStyle = TextStyle(color: Color(0x40060607), fontSize: 16.0);
+  final _labelStyle = TextStyle(color: Color(0xFF343F48), fontSize: 12.0);
   final _border = OutlineInputBorder(
       borderSide: BorderSide(color: Colors.transparent),
       borderRadius: BorderRadius.circular(4.0),

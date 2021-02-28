@@ -13,9 +13,9 @@ class InfoRow extends StatelessWidget {
   final Function(String data) onCopy;
 
   static const _titleStyle = TextStyle(
-      color: Color(0xCC343F48), fontSize: 14.0, fontWeight: FontWeight.bold);
+      color: Color(0xCC343F48), fontSize: 16.0, fontWeight: FontWeight.bold);
   static const _dataStyle = TextStyle(
-      color: Color(0xB3343F48), fontSize: 8.0, fontWeight: FontWeight.w600);
+      color: Color(0xB3343F48), fontSize: 14.0, fontWeight: FontWeight.w600);
 
   const InfoRow(this.title, {Key key, this.icon, this.data, this.onCopy})
       : super(key: key);
@@ -32,13 +32,16 @@ class InfoRow extends StatelessWidget {
           child: Row(
               children: [
                 icon != null ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 9.0, 0.0),
-                  child: SberIcon(icon),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 9.0, 3.0),
+                  child: SberIcon(icon, size: 32.0),
                 ) : SizedBox(),
                 Text(title ?? "", style: _titleStyle),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14.0, 0.0, 0.0, 0.0),
-                  child: Text(data ?? "", style: _dataStyle),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(14.0, 0.0, 0.0, 0.0),
+                    child: Text(data ?? "", style: _dataStyle),
+                  ),
                 ),
                 (data != null && data.length > 0&& onCopy != null) ? Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
@@ -46,7 +49,6 @@ class InfoRow extends StatelessWidget {
                     data: ThemeData(
                       iconTheme: Theme.of(context).iconTheme.copyWith(
                         color: Color(0xFF07E897),
-                        size: 40.0
                       ),
                     ),
                     child: SberIconButton(SberIcon.Clipboard, onPressed: () => {

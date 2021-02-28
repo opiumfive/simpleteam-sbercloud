@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // SizedBox(height: 52.0),
                   // SvgPicture.asset("assets/images/logo_login.svg", width: 178.0, height: 26.0),
                   Spacer(),
-                  GestureDetector(child: Text('Account Login', style: TextStyle(color: Color(0xCC000000), fontSize: 23.0, fontWeight: FontWeight.bold)),
+                  GestureDetector(child: Text('Account Login', style: TextStyle(color: Color(0xCC000000), fontSize: 27.0, fontWeight: FontWeight.bold)),
                     onTap: () => _switchPlatform(context),
                   ),
                   SizedBox(height: 18.0),
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () => {},
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                          child: Text("Forgot Password", style: TextStyle(color: Color(0xFF343F48), fontSize: 11.0)),
+                          child: Text("Forgot Password", style: TextStyle(color: Color(0xFF343F48), fontSize: 14.0)),
                         ),
                       ),
                     ),

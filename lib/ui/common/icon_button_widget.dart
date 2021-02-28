@@ -6,17 +6,19 @@ class SberIconButton extends StatelessWidget {
   final String icon;
   final VoidCallback onPressed;
   final int counter;
+  final double size;
 
   const SberIconButton(
       this.icon, {
         Key key,
         this.onPressed,
-        this.counter
+        this.counter,
+        this.size
       }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final iconWidget = PlatformIconButton(icon: SberIcon(icon), onPressed: onPressed);
+    final iconWidget = PlatformIconButton(icon: SberIcon(icon, size: size), onPressed: onPressed);
     if (counter == null || counter == 0) {
       return iconWidget;
     } else {

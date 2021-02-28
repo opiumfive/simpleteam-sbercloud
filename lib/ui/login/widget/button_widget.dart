@@ -27,10 +27,10 @@ class _SberButton extends State<SberButton> {
     var textStyle;
     switch (widget.style) {
       case SberButtonStyle.Bordered:
-        textStyle = TextStyle(color: buttonColor, fontSize: 12.0);
+        textStyle = TextStyle(color: buttonColor, fontSize: 15.0);
         break;
       case SberButtonStyle.Filled:
-        textStyle = TextStyle(color: Color(0xE6FFFFFF), fontSize: 12.0);
+        textStyle = TextStyle(color: Color(0xE6FFFFFF), fontSize: 15.0);
         break;
     }
 
@@ -66,7 +66,11 @@ class _SberButton extends State<SberButton> {
         child: Container(
           width: double.infinity,
           height: 48.0,
-          child: Center(child: Text(widget.text, style: textStyle)),
+          child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(widget.text, style: textStyle),
+              )),
         ),
         color: filledColor,
         elevation: 0.0
