@@ -29,7 +29,7 @@ class AuthApiUsecase with ChangeNotifier {
     restClient = new RestClient(dio, baseUrl: API_BASE_IAM);
   }
 
-  Future<BaseModel<Token>> login(String login, String password) async {
+  Future<BaseModel<Token>> login(String login, String password, String project, String domain) async {
     _loggedInStatus = Status.Authenticating;
     notifyListeners();
 
@@ -38,7 +38,7 @@ class AuthApiUsecase with ChangeNotifier {
       const _extra = <String, dynamic>{};
       final queryParameters = <String, dynamic>{};
       final _data = <String, dynamic>{};
-      _data.addAll(LoginRequest(login: login, password: password).toJson() ?? <String, dynamic>{});
+      _data.addAll(LoginRequest(login: login, password: password, project: project, domain: domain).toJson() ?? <String, dynamic>{});
       final _result = await dio.request<Map<String, dynamic>>('/v3/auth/tokens',
           queryParameters: queryParameters,
           options: RequestOptions(

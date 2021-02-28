@@ -136,21 +136,25 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     switch (_currentIndex) {
       case 0:
         actions.add(SberIconButton(SberIcon.Edit, onPressed: onEdit));
-        actions.add(
-            SberIconButton(SberIcon.Alarm, onPressed: onAlert, counter: 8));
+        actions.add(SberIconButton(SberIcon.Alarm, onPressed: onAlert, counter: 8));
+        actions.add(SizedBox(width: 24.0));
         break;
       case 1:
         break;
       case 2:
         actions.add(SberIconButton(SberIcon.Logout,
             onPressed: () => {showLogoutDialog(context, api)}));
+        actions.add(SizedBox(width: 24.0));
         break;
     }
 
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: title,
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+            child: title,
+          ),
           actions: actions,
         ),
         body: PageTransitionSwitcher(
