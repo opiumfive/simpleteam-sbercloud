@@ -21,6 +21,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String _login = "hackathon113";
+  String _project = "ru-moscow-1";
+  String _domain = "hackathon113";
   String _password = "simpleteam123";
 
   final formKey = new GlobalKey<FormState>();
@@ -47,12 +49,15 @@ class _LoginScreenState extends State<LoginScreen> {
         String login = _login == null ? "" : _login;
         String password = _password == null ? "" : _password;
 
-        if (login.length <= 4 || password.length <= 4) {
+        String project = _project == null ? "" : _project;
+        String domain = _domain == null ? "" : _domain;
+
+        if (login.length <= 4 || password.length <= 4 || project.isEmpty || domain.isEmpty) {
           ToastUtils.showToastError(context, "Ошибка данных");
           return;
         }
 
-        final Future<BaseModel<Token>> user = auth.login(login, _password);
+        final Future<BaseModel<Token>> user = auth.login(login, password, project, domain);
         user.then((baseModelUser)  {
           Token loginData = baseModelUser.data;
           if (loginData == null) {
@@ -79,15 +84,19 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 52.0),
-                  SvgPicture.asset("assets/images/logo_login.svg", width: 178.0, height: 26.0),
+                  // SizedBox(height: 52.0),
+                  // SvgPicture.asset("assets/images/logo_login.svg", width: 178.0, height: 26.0),
                   Spacer(),
                   GestureDetector(child: Text('Account Login', style: TextStyle(color: Color(0xCC000000), fontSize: 23.0, fontWeight: FontWeight.bold)),
                     onTap: () => _switchPlatform(context),
                   ),
                   SizedBox(height: 18.0),
                   SberTextField(onChanged: (value) => _login = value, placeholder: "Username", text: _login),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 9.0),
+                  SberTextField(onChanged: (value) => _project = value, placeholder: "Project", text: _project),
+                  SizedBox(height: 9.0),
+                  SberTextField(onChanged: (value) => _domain = value, placeholder: "Domain", text: _domain),
+                  SizedBox(height: 9.0),
                   SberTextField(onChanged: (password) => _password = password, placeholder: "Password", text: _password, isPassword: true),
                   Align(
                     alignment: Alignment.centerRight,

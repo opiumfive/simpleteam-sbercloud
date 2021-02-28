@@ -122,8 +122,8 @@ class Token {
 class LoginRequest {
   Auth auth;
 
-  LoginRequest({String login, String password}) {
-    auth = Auth(login: login, password: password);
+  LoginRequest({String login, String password, String project, String domain}) {
+    auth = Auth(login: login, password: password, project: project, domain: domain);
   }
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) => _$LoginRequestFromJson(json);
@@ -138,10 +138,11 @@ class LoginRequest {
 @JsonSerializable()
 class Auth {
   Identity identity;
-  Scope scope = Scope();
+  Scope scope;
 
-  Auth({String login, String password}) {
-    identity = Identity(login: login, pass: password);
+  Auth({String login, String password, String project, String domain}) {
+    identity = Identity(login: login, pass: password, domain: domain);
+    scope = Scope(Project(project));
   }
 
   factory Auth.fromJson(Map<String, dynamic> json) => _$AuthFromJson(json);
@@ -158,8 +159,8 @@ class Identity {
   List<String> methods = ["password"];
   Password password;
 
-  Identity({String login, String pass}) {
-    password = Password(login: login, pass: pass);
+  Identity({String login, String pass, String domain}) {
+    password = Password(UserCreds(login, pass, Domain(domain)));
   }
 
   factory Identity.fromJson(Map<String, dynamic> json) => _$IdentityFromJson(json);
@@ -175,9 +176,7 @@ class Identity {
 class Password {
   UserCreds user;
 
-  Password({String login, String pass}) {
-    user = UserCreds(login, pass);
-  }
+  Password(this.user);
 
   factory Password.fromJson(Map<String, dynamic> json) => _$PasswordFromJson(json);
   Map<String, dynamic> toJson() => _$PasswordToJson(this);
@@ -192,9 +191,9 @@ class Password {
 class UserCreds {
   String name;
   String password;
-  Domain domain = Domain();
+  Domain domain;
 
-  UserCreds(this.name, this.password);
+  UserCreds(this.name, this.password, this.domain);
 
   factory UserCreds.fromJson(Map<String, dynamic> json) => _$UserCredsFromJson(json);
   Map<String, dynamic> toJson() => _$UserCredsToJson(this);
@@ -207,11 +206,11 @@ class UserCreds {
 
 @JsonSerializable()
 class Domain {
-  String name = DOMAIN_NAME;
+  String name;
   @JsonKey(includeIfNull: false)
   String id;
 
-  Domain();
+  Domain(this.name);
 
   factory Domain.fromJson(Map<String, dynamic> json) => _$DomainFromJson(json);
   Map<String, dynamic> toJson() => _$DomainToJson(this);
@@ -224,9 +223,9 @@ class Domain {
 
 @JsonSerializable()
 class Scope {
-  Project project = Project();
+  Project project;
 
-  Scope();
+  Scope(this.project);
 
   factory Scope.fromJson(Map<String, dynamic> json) => _$ScopeFromJson(json);
   Map<String, dynamic> toJson() => _$ScopeToJson(this);
@@ -239,9 +238,9 @@ class Scope {
 
 @JsonSerializable()
 class Project {
-  String name = PROJECT_NAME;
+  String name;
 
-  Project();
+  Project(this.name);
 
   factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
   Map<String, dynamic> toJson() => _$ProjectToJson(this);
