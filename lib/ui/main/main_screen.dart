@@ -357,7 +357,10 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                                 style: TextStyle(fontSize: 6)))
                                       ],
                                     ) : Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                      Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48))),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: FittedBox(fit: BoxFit.fitWidth, child: Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48)))),
+                                      ),
                                       SizedBox(height: 2,),
                                       Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 6))
                                     ],),
