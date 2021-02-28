@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sbercloud_flutter/ui/alarm/alarms_screen.dart';
 import 'package:sbercloud_flutter/ui/common/card_widget.dart';
+import 'package:sbercloud_flutter/ui/common/dropdown_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_button_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
@@ -150,30 +151,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         break;
     }
 
-    final List<DropdownMenuItem<String>> periods = <String>[
-      '1 day', '2 days', '3 days'
-    ].map((e) => DropdownMenuItem(value: e, child: Text(
-      e,
-      style: TextStyle(
-          color: Color(0xA3000000),
-          fontSize: 13,
-          fontWeight: FontWeight.bold),
-    ),)).toList();
-
-
-    var periodWidget = DropdownButton(
-        style: TextStyle(color: Color(0xB3343F48), fontSize: 11.0, fontWeight: FontWeight.w600),
-        value: _selectedPeriod,
-        underline: Container(),
-        items: periods,
-        icon: SberIcon(SberIcon.Dropdown),
-        iconSize: 16.0,
-        onChanged: (String newValue) {
-      setState(() {
-        _selectedPeriod = newValue;
-      });
-    });
-
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -183,15 +160,22 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             child: title,
           ),
           actions: actions,
-          bottom: PreferredSize(
+          bottom: _currentIndex == 0 ? PreferredSize(
             preferredSize: const Size.fromHeight(30),
             child: Container(
               height: 32.0,
               padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 8.0),
               alignment: Alignment.centerLeft,
-              child: periodWidget,
+              child: Dropdown(
+                  values: ['1 day', '2 days', '3 days'],
+                  value: _selectedPeriod,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _selectedPeriod = newValue;
+                    });
+                  }),
             ),
-          ),
+          ) : null,
         ),
         body: PageTransitionSwitcher(
           child: case2(
