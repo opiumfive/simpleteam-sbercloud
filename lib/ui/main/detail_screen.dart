@@ -46,11 +46,17 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-        title: Text(metrics[0].getHumanName(),
-            style: TextStyle(
-                color: Color(0xFF343F48),
-                fontSize: 27.0,
-                fontWeight: FontWeight.bold))
+        title: Container(
+          height: 27.0,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(metrics[0].getHumanName(),
+                style: TextStyle(
+                    color: Color(0xFF343F48),
+                    fontSize: 27.0,
+                    fontWeight: FontWeight.bold)),
+          ),
+        )
     ),
     body: Container(
       padding: const EdgeInsets.fromLTRB(0, 32.0, 0.0, 16.0),

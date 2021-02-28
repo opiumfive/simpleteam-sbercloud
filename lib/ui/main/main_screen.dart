@@ -74,12 +74,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void showLogoutDialog(BuildContext context, AuthApiUsecase api) {
     // set up the buttons
     PlatformDialogAction cancelButton = PlatformDialogAction(
+        material: (_, __) => MaterialDialogActionData(
+            textColor: Color(0xFF07E897),
+        ),
       child: Text("Отмена"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     PlatformDialogAction continueButton = PlatformDialogAction(
+      material: (_, __) => MaterialDialogActionData(
+        textColor: Color(0xFF07E897)
+      ),
       child: Text("Да"),
       onPressed: () {
         UserPreferences().removeUser();
