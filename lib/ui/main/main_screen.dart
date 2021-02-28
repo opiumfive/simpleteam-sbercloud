@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:sbercloud_flutter/api/providers.dart';
 import 'package:sbercloud_flutter/api/usecase/auth_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
@@ -11,9 +10,7 @@ import 'package:sbercloud_flutter/models/cloud_eye_models.dart';
 import 'package:sbercloud_flutter/storage/user_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sbercloud_flutter/ui/alarm/alarms_screen.dart';
 import 'package:sbercloud_flutter/ui/common/card_widget.dart';
@@ -22,13 +19,11 @@ import 'package:sbercloud_flutter/ui/common/icon_button_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/common/shimmers.dart';
 import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:animations/animations.dart';
 
 import "package:collection/collection.dart";
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../../const.dart';
-import '../toast_utils.dart';
 import 'chart_data.dart';
 import 'chart_view.dart';
 
@@ -40,10 +35,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
-  String _selectedPeriod = "1 day";
 
+  String _selectedPeriod = "1 day";
   int _currentIndex = 0;
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
   void initState() {
@@ -59,6 +53,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // здесь можно обработать жизненный цикл приложения свернули-развернули
     if (state == AppLifecycleState.resumed) {
     } else if (state == AppLifecycleState.paused) {
     } else if (state == AppLifecycleState.inactive) {}
@@ -83,6 +78,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         Navigator.of(context).pop();
       },
     );
+
     PlatformDialogAction continueButton = PlatformDialogAction(
       material: (_, __) => MaterialDialogActionData(
         textColor: Color(0xFF07E897)
@@ -134,11 +130,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     ];
 
     final label = bottomNavigationBarItems[_currentIndex].label;
-    final title = Text(label,
-        style: TextStyle(
-            color: Color(0xFF343F48),
-            fontSize: 27.0,
-            fontWeight: FontWeight.bold));
+    final title = Text(label, style: TextStyle(color: Color(0xFF343F48), fontSize: 27.0, fontWeight: FontWeight.bold));
 
     AuthApiUsecase api = Provider.of<AuthApiUsecase>(context);
 
@@ -192,7 +184,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                         case "last week":
                           Provider.of<MainProvider>(context, listen: false).setRange(DateTimeRange(start: DateTime.now().subtract(Duration(days: 7)), end: DateTime.now()));
                           break;
-                          break;
                       }
                     });
                   }),
@@ -203,12 +194,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           child: case2(
               _currentIndex,
               {
-                0: Center(
-                    child: Container(
-                  key: UniqueKey(),
-                  //padding: EdgeInsets.all(16.0),
-                  child: _mainWidget(),
-                )),
+                0: Center(child: Container(key: UniqueKey(), child: _mainWidget(),)),
                 1: AlarmsScreen(),
                 2: ProfileScreen()
               },
@@ -228,16 +214,11 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           items: bottomNavigationBarItems,
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
-          //selectedFontSize: textTheme.caption.fontSize,
-          //unselectedFontSize: textTheme.caption.fontSize,
           onTap: (index) {
             setState(() {
               _currentIndex = index;
             });
           },
-          //selectedItemColor: colorScheme.onPrimary,
-          //unselectedItemColor: colorScheme.onPrimary.withOpacity(0.38),
-          //backgroundColor: colorScheme.primary,
         ));
   }
 
@@ -299,6 +280,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               final List<Resource> resources = mainProvider.resources;
               final List<Special> specials = mainProvider.specials;
 
+              // группировка по сериям графиков
               final groups = groupBy(metrics, (Metric e) {
                 return '${e.namespace}+${e.metric_name}';
               });
@@ -307,149 +289,137 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                 itemCount: groups.keys.length + 1,
                 itemBuilder: (ctx, index) {
                   return index == 0
-                      ? SizedBox(
-                          height: 150,
-                          child: ListView.builder(
-                              itemCount: resources.length + specials.length,
-                              padding: EdgeInsets.fromLTRB(30, 30, 0, 30),
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (ctx, indexHor) {
-                                return Container(
-                                  width: 100,
-                                  height: 100,
-                                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: CardWidget(
-                                    child: indexHor < resources.length ? Stack(
-                                      alignment: AlignmentDirectional.center,
-                                      children: [
-                                        Container(
-                                            margin: EdgeInsets.only(bottom: 10),
-                                            width: 55,
-                                            height: 55,
-                                            child: SfRadialGauge(axes: <
-                                                RadialAxis>[
-                                              RadialAxis(
-                                                  minimum: 0,
-                                                  maximum: 100,
-                                                  showLabels: false,
-                                                  showTicks: false,
-                                                  radiusFactor: 0.8,
-                                                  startAngle: 270,
-                                                  endAngle: 270,
-                                                  axisLineStyle: AxisLineStyle(
-                                                    thickness: 0.17,
-                                                    cornerStyle:
-                                                        CornerStyle.bothFlat,
-                                                    color:
-                                                        const Color(0xFFE5E5E5),
-                                                    thicknessUnit:
-                                                        GaugeSizeUnit.factor,
-                                                  ),
-                                                  pointers: <GaugePointer>[
-                                                    RangePointer(
-                                                        value: resources[indexHor].used.toDouble() / resources[indexHor].quota > 0.1
-                                                            ? resources[indexHor].used.toDouble()
-                                                            : resources[indexHor].quota * 0.11,
-                                                        cornerStyle: CornerStyle.bothCurve,
-                                                        width: 0.22,
-                                                        sizeUnit: GaugeSizeUnit.factor,
-                                                        enableAnimation: true,
-                                                        animationDuration: 20,
-                                                        color: const Color(0xFF07E897),
-                                                        animationType: AnimationType.linear)
-                                                  ],
-                                                  annotations: <
-                                                      GaugeAnnotation>[
-                                                    GaugeAnnotation(
-                                                        positionFactor: 0.1,
-                                                        angle: 90,
-                                                        widget: Text(
-                                                          resources[indexHor].used.toStringAsFixed(0) + '/' + resources[indexHor].quota.toStringAsFixed(0),
-                                                          style: const TextStyle(fontSize: 10, color: Color(0xA3000000), fontWeight: FontWeight.bold),
-                                                        ))
-                                                  ])
-                                            ])),
-                                        Container(
-                                            margin: EdgeInsets.only(bottom: 10),
-                                            alignment: Alignment.bottomCenter,
-                                            child: Text(
-                                                resources[indexHor]
-                                                    .type
-                                                    .capitalize(),
-                                                style: TextStyle(fontSize: 6)))
-                                      ],
-                                    ) : Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: FittedBox(fit: BoxFit.fitWidth, child: Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48)))),
-                                      ),
-                                      SizedBox(height: 2,),
-                                      Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 6))
-                                    ],),
-                                  ),
-                                );
-                              }),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SizedBox(
-                                height: index == 1 ? 0 : 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      groups[groups.keys.toList()[index - 1]]
-                                          .first
-                                          .getHumanName(),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      style: TextStyle(
-                                          color: Color(0xFF343F48),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Visibility(
-                                      visible: false,
-                                      child: InkWell(
-                                        onTap: () {
-                                          mainProvider.excludedMetrics.add(
-                                              groups.keys.toList()[index - 1]);
-                                        },
-                                        child: Icon(Icons.close,
-                                            color: Color(0xFF343F48)
-                                                .withOpacity(0.2)),
-                                      ))
-                                ],
-                              ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              CardWidget(
-                                  child: _dashboardItem(
-                                      groups[groups.keys.toList()[index - 1]],
-                                      mainProvider,
-                                      cloudEyeUsecase))
-                            ],
-                          ));
+                      ? _topDashboardList(specials, resources)
+                      : _dashboardList(index, groups, mainProvider, cloudEyeUsecase);
                 },
               );
           }
         });
   }
 
-  Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider,
-      CloudEyeUsecase cloudEyeUsecase) {
+  Widget _topDashboardList(List<Special> specials, List<Resource> resources) {
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(
+          itemCount: resources.length + specials.length,
+          padding: EdgeInsets.fromLTRB(30, 30, 0, 30),
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (ctx, indexHor) {
+            return _topDashboardItem(indexHor, specials, resources);
+          }),
+    );
+  }
+
+  Widget _dashboardList(int index, Map<String, List<Metric>> groups, MainProvider mainProvider, CloudEyeUsecase cloudEyeUsecase) {
+    return Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(height: index == 1 ? 0 : 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    groups[groups.keys.toList()[index - 1]].first.getHumanName(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(color: Color(0xFF343F48), fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Visibility(
+                    visible: false,
+                    child: InkWell(
+                      onTap: () {
+                        mainProvider.excludedMetrics.add(groups.keys.toList()[index - 1]);
+                      },
+                      child: Icon(Icons.close, color: Color(0xFF343F48).withOpacity(0.2)),)
+                )
+              ],
+            ),
+            SizedBox(height: 12,),
+            CardWidget(child: _dashboardItem(groups[groups.keys.toList()[index - 1]], mainProvider, cloudEyeUsecase))
+          ],
+        ));
+  }
+
+  Widget _topDashboardItem(int indexHor, List<Special> specials, List<Resource> resources) {
+    return Container(
+      width: 100,
+      height: 100,
+      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+      child: CardWidget(
+        child: indexHor < resources.length ? Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Container(
+                margin: EdgeInsets.only(bottom: 10),
+                width: 55,
+                height: 55,
+                child: SfRadialGauge(axes: <
+                    RadialAxis>[
+                  RadialAxis(
+                      minimum: 0,
+                      maximum: 100,
+                      showLabels: false,
+                      showTicks: false,
+                      radiusFactor: 0.8,
+                      startAngle: 270,
+                      endAngle: 270,
+                      axisLineStyle: AxisLineStyle(
+                        thickness: 0.17,
+                        cornerStyle: CornerStyle.bothFlat,
+                        color: const Color(0xFFE5E5E5),
+                        thicknessUnit: GaugeSizeUnit.factor,
+                      ),
+                      pointers: <GaugePointer>[
+                        RangePointer(
+                            value: resources[indexHor].used.toDouble() / resources[indexHor].quota > 0.1
+                                ? resources[indexHor].used.toDouble()
+                                : resources[indexHor].quota * 0.11,
+                            cornerStyle: CornerStyle.bothCurve,
+                            width: 0.22,
+                            sizeUnit: GaugeSizeUnit.factor,
+                            enableAnimation: true,
+                            animationDuration: 20,
+                            color: const Color(0xFF07E897),
+                            animationType: AnimationType.linear)
+                      ],
+                      annotations: <
+                          GaugeAnnotation>[
+                        GaugeAnnotation(
+                            positionFactor: 0.1,
+                            angle: 90,
+                            widget: Text(
+                              resources[indexHor].used.toStringAsFixed(0) + '/' + resources[indexHor].quota.toStringAsFixed(0),
+                              style: const TextStyle(fontSize: 10, color: Color(0xA3000000), fontWeight: FontWeight.bold),
+                            ))
+                      ])
+                ])),
+            Container(
+                margin: EdgeInsets.only(bottom: 10),
+                alignment: Alignment.bottomCenter,
+                child: Text(resources[indexHor].type.capitalize(), style: TextStyle(fontSize: 6))
+            )
+          ],
+        ) : Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: FittedBox(fit: BoxFit.fitWidth, child: Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48)))),
+          ),
+          SizedBox(height: 2,),
+          Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 6))
+        ],),
+      ),
+    );
+  }
+
+  Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider, CloudEyeUsecase cloudEyeUsecase) {
     return ChartView(
       metrics: metrics,
       mainProvider: mainProvider,

@@ -17,6 +17,7 @@ enum Status {
   Authenticating,
 }
 
+// use case for IAM
 class AuthApiUsecase with ChangeNotifier {
   Dio dio;
   RestClient restClient;

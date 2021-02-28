@@ -48,7 +48,7 @@ class _AppState extends State<App> {
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primaryColor: Colors.white,
       accentColor: Color(0xFF07E897),
-        scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+      scaffoldBackgroundColor: const Color(0xFFFFFFFF),
       canvasColor: const Color(0xFFFFFFFF),
       fontFamily: "SB Sans Display"
     );
@@ -72,7 +72,6 @@ class _AppState extends State<App> {
       await initializeDateFormatting();
       return UserPreferences().getUser();
     }
-
 
     return MultiProvider(
       providers: [

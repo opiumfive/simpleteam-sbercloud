@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import '../../const.dart';
 
+// use case for Application Operations Management, not used now, just for future use
 class ApplicationOperationsUsecase with ChangeNotifier {
 
   Dio dio;

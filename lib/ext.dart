@@ -42,6 +42,7 @@ String validateEmail(String value) {
   return _msg;
 }
 
+// switch в виде выражения
 TValue case2<TOptionType, TValue>(
     TOptionType selectedOption,
     Map<TOptionType, TValue> branches, [

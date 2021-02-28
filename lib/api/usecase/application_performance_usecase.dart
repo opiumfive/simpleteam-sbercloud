@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import '../../const.dart';
 
+// use case for Application Performance Management, not used now, just for future use
 class ApplicationPerformanceUsecase with ChangeNotifier {
 
   Dio dio;
