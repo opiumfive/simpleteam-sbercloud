@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sbercloud_flutter/ui/common/card_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
+import 'package:sbercloud_flutter/ui/common/shimmers.dart';
 import 'package:sbercloud_flutter/ui/common/stat_widget.dart';
 
 class AlarmsScreen extends StatefulWidget {
@@ -56,12 +57,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return SizedBox(
-                height: MediaQuery.of(context).size.height / 1.3,
-                child: Center(
-                  child: PlatformCircularProgressIndicator(),
-                ),
-              );
+              return ShimmerList();
             default:
               if (snapshot.hasError || snapshot.data == null)
                 return Text('fail');

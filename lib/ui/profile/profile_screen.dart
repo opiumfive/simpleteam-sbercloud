@@ -14,6 +14,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
+import 'package:sbercloud_flutter/ui/common/shimmers.dart';
 import 'package:sbercloud_flutter/ui/common/stat_widget.dart';
 import 'package:sbercloud_flutter/ui/profile/widget/info_row_widget.dart';
 import 'package:sbercloud_flutter/ui/toast_utils.dart';
@@ -60,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     if (userDetail == null) {
-      return Center(child: PlatformCircularProgressIndicator());
+      return ShimmerList();
     }
     print(userDetail);
     User user = Provider.of<UserProvider>(context, listen: false).user;
