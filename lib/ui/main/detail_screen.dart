@@ -30,6 +30,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   DateTimeRange dateTimeRange;
   int interval;
+  bool needRefresh = false;
 
   @override
   void initState() {
@@ -80,134 +81,138 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-        title: Text(metrics[0].getHumanName(),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            softWrap: false,
-            style: TextStyle(
-                color: Color(0xFF343F48),
-                fontSize: 27.0,
-                fontWeight: FontWeight.bold))
-    ),
-    body: Container(
-      height: double.infinity,
-      padding: const EdgeInsets.fromLTRB(0, 32.0, 0, 16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            title: Text(metrics[0].getHumanName(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
+                style: TextStyle(
+                    color: Color(0xFF343F48),
+                    fontSize: 27.0,
+                    fontWeight: FontWeight.bold))
+        ),
+        body: Container(
+          height: double.infinity,
+          padding: const EdgeInsets.fromLTRB(0, 32.0, 0, 16.0),
+          child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
 
-            Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Type',
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
+                  Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Type',
+                          style: TextStyle(
+                              color: Color(0xFF343F48).withOpacity(0.37),
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 1,),
+                        DropdownButton(value: _selectedType, items: types, onChanged: (String newValue) {
+                          setState(() {
+                            _selectedType = newValue;
+                            needRefresh = true;
+                          });
+                        }),
+                      ]),
+
+                  SizedBox(width: 10,),
+                  Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Interval',
+                          style: TextStyle(
+                              color: Color(0xFF343F48).withOpacity(0.37),
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 1,),
+                        DropdownButton(value: _selectedInterval, items: intervals, onChanged: (String newValue) {
+                          setState(() {
+                            _selectedInterval = newValue;
+                            needRefresh = true;
+                            switch(_selectedInterval) {
+                              case "2 hour":
+                                interval = 7200;
+                                break;
+                              case "3 hour":
+                                interval = 10800;
+                                break;
+                              case "1 hour":
+                                interval = 3600;
+                                break;
+                              case "4 hour":
+                                interval = 14400;
+                                break;
+                            }
+                          });
+                        }),]),
+                  SizedBox(width: 10,),
+
+                  Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Period',
+                          style: TextStyle(
+                              color: Color(0xFF343F48).withOpacity(0.37),
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 1,),
+                        DropdownButton(value: _selectedPeriod, items: periods, onChanged: (String newValue) {
+                          setState(() {
+                            _selectedPeriod = newValue;
+                            needRefresh = true;
+                            switch(_selectedPeriod) {
+                              case "today":
+                                dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now());
+                                break;
+                              case "last 2 days":
+                                dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 2)), end: DateTime.now());
+                                break;
+                              case "last 3 days":
+                                dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 3)), end: DateTime.now());
+                                break;
+                              case "last week":
+                                dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 7)), end: DateTime.now());
+                                break;
+                              case "last month":
+                                dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 30)), end: DateTime.now());
+                                break;
+                            }
+                          });
+                        })])
+
+                ],
+              ),),
+              Container(
+                padding: const EdgeInsets.all(2.0),
+                child: ChartView(
+                  metrics: metrics,
+                  mainProvider: mainProvider,
+                  cloudEyeUsecase: cloudEyeUsecase,
+                  axisVisible: true,
+                  gesturesControl: true,
+                  dateTimeRange: dateTimeRange,
+                  interval: interval,
+                  type: _selectedType,
+                  needRefresh: needRefresh
+                ),
               ),
-              SizedBox(width: 1,),
-              DropdownButton(value: _selectedType, items: types, onChanged: (String newValue) {
-                setState(() {
-                  _selectedType = newValue;
-                });
-              }),
-              ]),
-
-              SizedBox(width: 10,),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text(
-                'Interval',
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 1,),
-              DropdownButton(value: _selectedInterval, items: intervals, onChanged: (String newValue) {
-                setState(() {
-                  _selectedInterval = newValue;
-                  switch(_selectedInterval) {
-                    case "2 hour":
-                      interval = 7200;
-                      break;
-                    case "3 hour":
-                      interval = 10800;
-                      break;
-                    case "1 hour":
-                      interval = 3600;
-                      break;
-                    case "4 hour":
-                      interval = 14400;
-                      break;
-                  }
-                });
-              }),]),
-              SizedBox(width: 10,),
-
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-              Text(
-                'Period',
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 1,),
-              DropdownButton(value: _selectedPeriod, items: periods, onChanged: (String newValue) {
-                setState(() {
-                  _selectedPeriod = newValue;
-                  switch(_selectedPeriod) {
-                    case "today":
-                      dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now());
-                      break;
-                    case "last 2 days":
-                      dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 2)), end: DateTime.now());
-                      break;
-                    case "last 3 days":
-                      dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 3)), end: DateTime.now());
-                      break;
-                    case "last week":
-                      dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 7)), end: DateTime.now());
-                      break;
-                    case "last month":
-                      dateTimeRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 30)), end: DateTime.now());
-                      break;
-                  }
-                });
-              })])
-
             ],
-          ),),
-          Container(
-            padding: const EdgeInsets.all(2.0),
-            child: ChartView(
-              metrics: metrics,
-              mainProvider: mainProvider,
-              cloudEyeUsecase: cloudEyeUsecase,
-              axisVisible: true,
-              gesturesControl: true,
-              dateTimeRange: dateTimeRange,
-              interval: interval,
-              type: _selectedType,
-            ),
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }

@@ -95,15 +95,11 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                   },
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      DateTime now = DateTime.now();
-                      String formattedDate = DateFormat('HH:mm:ss').format(now);
-                      final updatedTitle = "Updated date: $formattedDate";
                       return CardWidget(
                           child: StatBlockView(
-                              serviceIcon: SberIcon.Eye12dp,
+                              serviceIcon: SberIcon.EyeCloud,
                               serviceName: "Eye Cloud",
                               sumTitle: "All alarm",
-                              date: updatedTitle,
                               data: {
                             "Critical": critical,
                             "Major": major,

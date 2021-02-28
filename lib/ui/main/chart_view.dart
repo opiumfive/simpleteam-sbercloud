@@ -7,6 +7,7 @@ import 'package:sbercloud_flutter/api/usecase/cloud_eye_usecase.dart';
 import 'package:sbercloud_flutter/const.dart';
 import 'package:sbercloud_flutter/models/base_model.dart';
 import 'package:sbercloud_flutter/models/cloud_eye_models.dart';
+import 'package:sbercloud_flutter/ui/common/cart_bottom.dart';
 
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -25,6 +26,7 @@ class ChartView extends StatefulWidget {
   DateTimeRange dateTimeRange;
   int interval;
   String type;
+  bool needRefresh = false;
 
   ChartView(
       {Key key,
@@ -35,7 +37,7 @@ class ChartView extends StatefulWidget {
       this.gesturesControl,
       this.dateTimeRange,
       this.interval,
-      this.type})
+      this.type, this.needRefresh = false})
       : super(key: key);
 
   @override
@@ -109,7 +111,7 @@ class _ChartViewState extends State<ChartView> {
       return result;
     }
 
-    if (widget.mainProvider.chartDataCache.containsKey(key) && !widget.axisVisible) {
+    if (widget.mainProvider.chartDataCache.containsKey(key) && !widget.needRefresh) {
       widget.chartData = widget.mainProvider.chartDataCache[key];
       return _mainWidget();
     }
@@ -225,33 +227,7 @@ class _ChartViewState extends State<ChartView> {
               series: getTimeSeries(widget.chartData),
             ) : Center(child: Text("No data"),)
         ),
-        Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-          children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              SvgPicture.asset('assets/images/ic_eye_12dp.svg'),
-              SizedBox(width: 6,),
-              Text(
-                widget.metrics[0].getHumanNamespace(),
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],),
-
-
-            Text(
-              'Updated   ${DateFormat("hh:mm:ss", "ru").format(DateTime.now())}',
-              style: TextStyle(
-                  color: Color(0xFF343F48).withOpacity(0.37),
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold),
-            ),
-
-          ],
-        ),)
+        CardButton(serviceName: widget.metrics[0].getHumanNamespace())
 
       ],
     );

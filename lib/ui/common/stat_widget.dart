@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sbercloud_flutter/ui/common/cart_bottom.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 
 class StatBlockView extends StatefulWidget {
@@ -24,10 +25,6 @@ class StatBlockView extends StatefulWidget {
 }
 
 class _StatBlockState extends State<StatBlockView> {
-  static final _serviceNameStyle = TextStyle(
-      color: Color(0x5E343F48), fontSize: 9.0, fontWeight: FontWeight.w600);
-  static final _dateStyle = TextStyle(
-      color: Color(0x5E343F48), fontSize: 9.0, fontWeight: FontWeight.w600);
 
   @override
   Widget build(BuildContext context) {
@@ -49,34 +46,21 @@ class _StatBlockState extends State<StatBlockView> {
     } else {
       rows = Container();
     }
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12.0, 24.0, 12.0, 4.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 0.0),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(flex: 1, child: rows),
               _StatSum(sum, title: widget.sumTitle)
             ],
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              widget.serviceIcon != null
-                  ? Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3.0),
-                    child: SberIcon(widget.serviceIcon),
-                  )
-                  : SizedBox(),
-              Text(widget.serviceName ?? "", style: _serviceNameStyle),
-              Spacer(),
-              Text(widget.date ?? "", style: _dateStyle),
-            ],
-          )
-        ],
-      ),
+        ),
+        CardButton(serviceName: widget.serviceName, date: widget.date)
+      ],
     );
   }
 }

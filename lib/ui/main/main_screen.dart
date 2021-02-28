@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sbercloud_flutter/ui/alarm/alarms_screen.dart';
 import 'package:sbercloud_flutter/ui/common/card_widget.dart';
+import 'package:sbercloud_flutter/ui/common/dropdown_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_button_widget.dart';
 import 'package:sbercloud_flutter/ui/common/icon_widget.dart';
 import 'package:sbercloud_flutter/ui/common/shimmers.dart';
@@ -39,6 +40,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
+  String _selectedPeriod = "1 day";
+
   int _currentIndex = 0;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
@@ -72,12 +75,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void showLogoutDialog(BuildContext context, AuthApiUsecase api) {
     // set up the buttons
     PlatformDialogAction cancelButton = PlatformDialogAction(
+        material: (_, __) => MaterialDialogActionData(
+            textColor: Color(0xFF07E897),
+        ),
       child: Text("Отмена"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     PlatformDialogAction continueButton = PlatformDialogAction(
+      material: (_, __) => MaterialDialogActionData(
+        textColor: Color(0xFF07E897)
+      ),
       child: Text("Да"),
       onPressed: () {
         UserPreferences().removeUser();
@@ -152,11 +161,43 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          elevation: 0.0,
           title: Padding(
             padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
             child: title,
           ),
           actions: actions,
+          bottom: _currentIndex == 0 ? PreferredSize(
+            preferredSize: const Size.fromHeight(30),
+            child: Container(
+              height: 32.0,
+              padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 8.0),
+              alignment: Alignment.centerLeft,
+              child: Dropdown(
+                  values: ['1 day', '2 days', '3 days', 'last week'],
+                  value: _selectedPeriod,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _selectedPeriod = newValue;
+                      switch(_selectedPeriod) {
+                        case "1 day":
+                          Provider.of<MainProvider>(context, listen: false).setRange(DateTimeRange(start: DateTime.now().subtract(Duration(hours: 24)), end: DateTime.now()));
+                          break;
+                        case "2 days":
+                          Provider.of<MainProvider>(context, listen: false).setRange(DateTimeRange(start: DateTime.now().subtract(Duration(days: 2)), end: DateTime.now()));
+                          break;
+                        case "3 days":
+                          Provider.of<MainProvider>(context, listen: false).setRange(DateTimeRange(start: DateTime.now().subtract(Duration(days: 3)), end: DateTime.now()));
+                          break;
+                        case "last week":
+                          Provider.of<MainProvider>(context, listen: false).setRange(DateTimeRange(start: DateTime.now().subtract(Duration(days: 7)), end: DateTime.now()));
+                          break;
+                          break;
+                      }
+                    });
+                  }),
+            ),
+          ) : null,
         ),
         body: PageTransitionSwitcher(
           child: case2(
@@ -277,13 +318,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                   width: 100,
                                   height: 100,
                                   padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Card(
-                                    shadowColor:
-                                        Color(0xFF000000).withOpacity(0.5),
-                                    elevation: 13,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
+                                  child: CardWidget(
                                     child: indexHor < resources.length ? Stack(
                                       alignment: AlignmentDirectional.center,
                                       children: [
@@ -344,7 +379,10 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                                 style: TextStyle(fontSize: 6)))
                                       ],
                                     ) : Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                      Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48))),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: FittedBox(fit: BoxFit.fitWidth, child: Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48)))),
+                                      ),
                                       SizedBox(height: 2,),
                                       Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 6))
                                     ],),
