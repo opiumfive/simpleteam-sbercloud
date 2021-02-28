@@ -127,17 +127,26 @@ class _ChartViewState extends State<ChartView> {
 
   void goDetail() {
     if (widget.gesturesControl == false && widget.chartData.length > 0) {
-      String key = widget.metrics[0].namespace + "+" + widget.metrics[0].metric_name;
-      Navigator.pushNamed(context, DETAIL_ROUTE, arguments: key);
+      Navigator.pushNamed(context, DETAIL_ROUTE, arguments: widget.metrics);
     }
   }
 
   Widget _mainWidget() {
+    return widget.gesturesControl ? _chartWidget() : InkWell(enableFeedback: !widget.gesturesControl,
+        canRequestFocus: !widget.gesturesControl,
+        borderRadius: BorderRadius.all(Radius.circular(6)),
+      onTap: () {
+        goDetail();
+      }
+      , child: IgnorePointer(ignoring: !widget.gesturesControl,child: _chartWidget()));
+  }
+
+  Widget _chartWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-    Container(padding: EdgeInsets.fromLTRB(12, 12, 12, 4), child:
+        Container(padding: EdgeInsets.fromLTRB(12, 12, 12, 4), child:
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -157,7 +166,7 @@ class _ChartViewState extends State<ChartView> {
               SvgPicture.asset('assets/images/ic_arrow_down.svg'),
               SizedBox(width: 3,),
               Text(widget.chartData.length > 0 ?
-                 "${widget.chartData[0].data.last.yValue} ${widget.chartData[0].unit}" : "" ,
+              "${widget.chartData[0].data.last.yValue} ${widget.chartData[0].unit}" : "" ,
                 style: TextStyle(
                     color: Color(0xFF343F48),
                     fontSize: 11,
@@ -168,39 +177,39 @@ class _ChartViewState extends State<ChartView> {
           ],
         ),),
         Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: <Color>[
-              Color.fromARGB(15, 7, 232, 151),
-              Color.fromARGB(0, 7, 232, 151)
-            ], stops: <double>[
-              0.0,
-              1.0
-            ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-          ),
-          height: 90,
-          child: widget.chartData.length > 0 ? SfCartesianChart(
-            plotAreaBorderWidth: 0,
-            //title: ChartTitle(text: widget.chartData.first.title),
-            primaryXAxis: DateTimeAxis(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: <Color>[
+                Color.fromARGB(15, 7, 232, 151),
+                Color.fromARGB(0, 7, 232, 151)
+              ], stops: <double>[
+                0.0,
+                1.0
+              ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+            ),
+            height: widget.axisVisible? null : 90,
+            child: widget.chartData.length > 0 ? SfCartesianChart(
+              plotAreaBorderWidth: 0,
+              //title: ChartTitle(text: widget.chartData.first.title),
+              primaryXAxis: DateTimeAxis(
+                  isVisible: widget.axisVisible,
+                  enableAutoIntervalOnZooming: true,
+                  majorGridLines: MajorGridLines(width: 0)),
+              tooltipBehavior:
+              TooltipBehavior(enable: widget.gesturesControl, canShowMarker: false),
+              trackballBehavior:
+              TrackballBehavior(enable: widget.gesturesControl),
+              zoomPanBehavior: _zoomingBehavior,
+              backgroundColor: Colors.transparent,
+              plotAreaBackgroundColor: Colors.transparent,
+              primaryYAxis: NumericAxis(
                 isVisible: widget.axisVisible,
                 enableAutoIntervalOnZooming: true,
-                majorGridLines: MajorGridLines(width: 0)),
-            tooltipBehavior:
-                TooltipBehavior(enable: widget.gesturesControl, canShowMarker: false),
-            trackballBehavior:
-                TrackballBehavior(enable: widget.gesturesControl),
-            zoomPanBehavior: _zoomingBehavior,
-            backgroundColor: Colors.transparent,
-            plotAreaBackgroundColor: Colors.transparent,
-            primaryYAxis: NumericAxis(
-              isVisible: widget.axisVisible,
-              enableAutoIntervalOnZooming: true,
-              labelFormat: '{value}',
-              axisLine: AxisLine(width: 0),
-              majorGridLines: MajorGridLines(width: 0),
-            ),
-            series: getTimeSeries(widget.chartData),
-          ) : Center(child: Text("No data"),)
+                labelFormat: '{value}',
+                axisLine: AxisLine(width: 0),
+                majorGridLines: MajorGridLines(width: 0),
+              ),
+              series: getTimeSeries(widget.chartData),
+            ) : Center(child: Text("No data"),)
         ),
         Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

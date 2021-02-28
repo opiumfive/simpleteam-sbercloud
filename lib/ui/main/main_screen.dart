@@ -38,7 +38,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
@@ -407,18 +407,13 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Widget _dashboardItem(List<Metric> metrics, MainProvider mainProvider,
       CloudEyeUsecase cloudEyeUsecase) {
-    return InkWell(borderRadius: BorderRadius.all(Radius.circular(6)),
-        onTap: () {
-      print("surprise");
-      //ToastUtils.showCustomToast(context, "message");
-        }
-    , child: ChartView(
+    return ChartView(
       metrics: metrics,
       mainProvider: mainProvider,
       cloudEyeUsecase: cloudEyeUsecase,
       axisVisible: false,
       gesturesControl: false,
-    ));
+    );
   }
 }
 
