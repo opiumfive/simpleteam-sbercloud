@@ -222,8 +222,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Color(0xBF343F48),
-          unselectedItemColor: Color(0xFFD2D2D2),
+          selectedItemColor: Color(0xFF343F48),
+          unselectedItemColor: Color(0xB3343F48),
           showUnselectedLabels: true,
           items: bottomNavigationBarItems,
           currentIndex: _currentIndex,
@@ -365,18 +365,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                                         angle: 90,
                                                         widget: Text(
                                                           resources[indexHor].used.toStringAsFixed(0) + '/' + resources[indexHor].quota.toStringAsFixed(0),
-                                                          style: const TextStyle(fontSize: 10, color: Color(0xA3000000), fontWeight: FontWeight.bold),
+                                                          style: const TextStyle(fontSize: 11, color: Color(0xA3000000), fontWeight: FontWeight.bold),
                                                         ))
                                                   ])
                                             ])),
                                         Container(
-                                            margin: EdgeInsets.only(bottom: 10),
+                                            margin: EdgeInsets.only(bottom: 6),
                                             alignment: Alignment.bottomCenter,
                                             child: Text(
                                                 resources[indexHor]
                                                     .type
                                                     .capitalize(),
-                                                style: TextStyle(fontSize: 6)))
+                                                style: TextStyle(fontSize: 10)))
                                       ],
                                     ) : Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                                       Padding(
@@ -384,7 +384,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                         child: FittedBox(fit: BoxFit.fitWidth, child: Text(specials[indexHor - resources.length].title, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF343F48)))),
                                       ),
                                       SizedBox(height: 2,),
-                                      Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, style: TextStyle(fontSize: 6))
+                                      Text(specials[indexHor - resources.length].subtitle, textAlign: TextAlign.center, maxLines: 3, style: TextStyle(fontSize: 10))
                                     ],),
                                   ),
                                 );

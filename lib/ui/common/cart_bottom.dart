@@ -10,9 +10,9 @@ class CardButton extends StatelessWidget {
   static var formatter = DateFormat('HH:mm:ss', 'ru');
 
   static final _serviceNameStyle = TextStyle(
-      color: Color(0x5E343F48), fontSize: 9.0, fontWeight: FontWeight.w600);
+      color: Color(0x5E343F48), fontSize: 14.0, fontWeight: FontWeight.w600);
   static final _dateStyle = TextStyle(
-      color: Color(0x5E343F48), fontSize: 9.0, fontWeight: FontWeight.w600);
+      color: Color(0x5E343F48), fontSize: 14.0, fontWeight: FontWeight.w600);
 
   const CardButton(
       {Key key,
@@ -33,13 +33,13 @@ class CardButton extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 4.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0.0, 0.0, 3.0, 3.0),
-            child: SberIcon(icon, size: 12.0),
+            child: SberIcon(icon, size: 20.0),
           ),
           Text(serviceName ?? "", style: _serviceNameStyle),
           Spacer(),

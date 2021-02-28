@@ -166,24 +166,30 @@ class _ChartViewState extends State<ChartView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Visibility(child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SvgPicture.asset('assets/images/ic_arrow_up.svg'),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2.0),
+                child: SvgPicture.asset('assets/images/ic_arrow_up.svg', height: 20.0, width: 20.0),
+              ),
               SizedBox(width: 3,),
               Text(widget.chartData.length > 1 ? "${widget.chartData[1].data.last.yValue} ${widget.chartData[1].unit}" : "",
                 style: TextStyle(
                     color: Color(0xFF343F48),
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
             ],), visible: widget.metrics.length > 1,),
 
             Visibility(child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
-              SvgPicture.asset('assets/images/ic_arrow_down.svg'),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2.0),
+                child: SvgPicture.asset('assets/images/ic_arrow_down.svg', height: 20.0, width: 20.0),
+              ),
               SizedBox(width: 3,),
               Text(widget.chartData.length > 0 ?
               "${widget.chartData[0].data.last.yValue} ${widget.chartData[0].unit}" : "" ,
                 style: TextStyle(
                     color: Color(0xFF343F48),
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
             ],), visible: widget.chartData.length > 0,)

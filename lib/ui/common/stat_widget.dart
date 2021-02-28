@@ -73,17 +73,20 @@ class _StatSum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(sum != null ? sum.toString() : "",
-            style: TextStyle(color: Color(0xED343F48), fontSize: 32.0)),
-        Text(title ?? "",
-            style: TextStyle(
-                color: Color(0xED343F48),
-                fontSize: 6.0,
-                fontWeight: FontWeight.w600))
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 6.0, right: 10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(sum != null ? sum.toString() : "",
+              style: TextStyle(color: Color(0xED343F48), fontSize: 40.0)),
+          Text(title ?? "",
+              style: TextStyle(
+                  color: Color(0xED343F48),
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600))
+        ],
+      ),
     );
   }
 }
@@ -93,9 +96,9 @@ class _RowsValue extends StatelessWidget {
   final int sum;
 
   static final _titleStyle = TextStyle(
-      color: Color(0xB8343F48), fontSize: 8.0, fontWeight: FontWeight.w600);
+      color: Color(0xB8343F48), fontSize: 14.0, fontWeight: FontWeight.w600);
   static final _valueStyle = TextStyle(
-      color: Color(0xB8343F48), fontSize: 8.0, fontWeight: FontWeight.w600);
+      color: Color(0xB8343F48), fontSize: 14.0, fontWeight: FontWeight.w600);
 
   const _RowsValue({Key key, this.data, this.sum}) : super(key: key);
 
@@ -105,7 +108,7 @@ class _RowsValue extends StatelessWidget {
       for (var e in data.entries)
         Container(
             alignment: Alignment.center,
-            height: 20.0,
+            height: 24.0,
             child: Text(e.key, style: _titleStyle))
     ];
     var progresses = [
@@ -113,7 +116,7 @@ class _RowsValue extends StatelessWidget {
         Container(
             padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
             alignment: Alignment.center,
-            height: 20.0,
+            height: 24.0,
             child: _StatProgressView(value: e.value, max: sum))
     ];
 

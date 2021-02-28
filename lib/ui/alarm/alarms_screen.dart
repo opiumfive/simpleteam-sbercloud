@@ -110,6 +110,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                     final alarm = alarms[index - 1];
                     //return Text(alarm.toJson().toString() + " " + alarm.condition.toJson().toString());
                     return CardWidget(
+                      shadowStyle: ShadowStyle.Light,
                       child: ListTile(
                         title: Text(alarm.alarm_name),
                         subtitle: Text(alarm.metric.getHumanTitle()),
