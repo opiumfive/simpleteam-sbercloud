@@ -28,7 +28,7 @@ class InfoRow extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0 ,16.0),
         child: Container(
-          height: 32.0,
+          height: 40.0,
           child: Row(
               children: [
                 icon != null ? Padding(
@@ -42,9 +42,17 @@ class InfoRow extends StatelessWidget {
                 ),
                 (data != null && data.length > 0&& onCopy != null) ? Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                  child: SberIconButton(SberIcon.Clipboard, onPressed: () => {
-                    onCopy.call(data)
-                  },),
+                  child: Theme(
+                    data: ThemeData(
+                      iconTheme: Theme.of(context).iconTheme.copyWith(
+                        color: Color(0xFF07E897),
+                        size: 40.0
+                      ),
+                    ),
+                    child: SberIconButton(SberIcon.Clipboard, onPressed: () => {
+                      onCopy.call(data)
+                    },),
+                  ),
                 ) : SizedBox(),
               ]),
         ),

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sbercloud_flutter/ui/common/dropdown_widget.dart';
 
 import 'chart_view.dart';
 
@@ -40,44 +41,22 @@ class _DetailScreenState extends State<DetailScreen> {
     CloudEyeUsecase cloudEyeUsecase = Provider.of<CloudEyeUsecase>(context);
     MainProvider mainProvider = Provider.of<MainProvider>(context);
 
-    final List<DropdownMenuItem<String>> intervals = <String>[
-      '1 hour', '2 hours', '3 hours'
-    ].map((e) => DropdownMenuItem(value: e, child: Text(
-      e,
-      style: TextStyle(
-          color: Color(0xA3000000),
-          fontSize: 13,
-          fontWeight: FontWeight.bold),
-    ),)).toList();
-
-    final List<DropdownMenuItem<String>> types = <String>[
-      'average', 'min', 'max', 'sum', 'variance'
-    ].map((e) => DropdownMenuItem(value: e, child: Text(
-      e,
-      style: TextStyle(
-          color: Color(0xA3000000),
-          fontSize: 13,
-          fontWeight: FontWeight.bold),
-    ),)).toList();
-
-    final List<DropdownMenuItem<String>> periods = <String>[
-      '1 day', '2 days', '3 days'
-    ].map((e) => DropdownMenuItem(value: e, child: Text(
-      e,
-      style: TextStyle(
-          color: Color(0xA3000000),
-          fontSize: 13,
-          fontWeight: FontWeight.bold),
-    ),)).toList();
+    const labelsPadding = const EdgeInsets.fromLTRB(0.0, 3.0,0.0 ,0.0);
 
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-        title: Text(metrics[0].getHumanName(),
-            style: TextStyle(
-                color: Color(0xFF343F48),
-                fontSize: 27.0,
-                fontWeight: FontWeight.bold))
+        title: Container(
+          height: 27.0,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(metrics[0].getHumanName(),
+                style: TextStyle(
+                    color: Color(0xFF343F48),
+                    fontSize: 27.0,
+                    fontWeight: FontWeight.bold)),
+          ),
+        )
     ),
     body: Container(
       padding: const EdgeInsets.fromLTRB(0, 32.0, 0.0, 16.0),
@@ -87,43 +66,52 @@ class _DetailScreenState extends State<DetailScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
 
             children: [
-              Text(
-                'Type',
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
+              Padding(
+                padding: labelsPadding,
+                child: Text(
+                  'Type',
+                  style: TextStyle(
+                      color: Color(0xFF343F48).withOpacity(0.37),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               SizedBox(width: 5,),
-              DropdownButton(value: _selectedType, items: types, onChanged: (String newValue) {
+              Dropdown(values: ['average', 'min', 'max', 'sum', 'variance'], value: _selectedType, fontSize: 13.0, onChanged: (String newValue) {
                 setState(() {
                   _selectedType = newValue;
                 });
               }),
               SizedBox(width: 10,),
-              Text(
-                'Interval',
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
+              Padding(
+                padding: labelsPadding,
+                child: Text(
+                  'Interval',
+                  style: TextStyle(
+                      color: Color(0xFF343F48).withOpacity(0.37),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               SizedBox(width: 5,),
-              DropdownButton(value: _selectedInterval, items: intervals, onChanged: (String newValue) {
+              Dropdown(values: ['1 hour', '2 hours', '3 hours'], value: _selectedInterval, fontSize: 13.0, onChanged: (String newValue) {
                 setState(() {
                   _selectedInterval = newValue;
                 });
               }),
               SizedBox(width: 10,),
-              Text(
-                'Period',
-                style: TextStyle(
-                    color: Color(0xFF343F48).withOpacity(0.37),
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
+              Padding(
+                padding: labelsPadding,
+                child: Text(
+                  'Period',
+                  style: TextStyle(
+                      color: Color(0xFF343F48).withOpacity(0.37),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               SizedBox(width: 5,),
-              DropdownButton(value: _selectedPeriod, items: periods, onChanged: (String newValue) {
+              Dropdown(values: ['1 day', '2 days', '3 days'], value: _selectedPeriod, fontSize: 13.0, onChanged: (String newValue) {
                 setState(() {
                   _selectedPeriod = newValue;
                 });
