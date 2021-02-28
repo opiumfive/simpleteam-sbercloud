@@ -7,7 +7,6 @@ import 'package:sbercloud_flutter/api/usecase/cloud_trace_usecase.dart';
 import 'package:sbercloud_flutter/api/usecase/profile_usecase.dart';
 import 'package:sbercloud_flutter/const.dart';
 import 'package:sbercloud_flutter/ui/main/detail_screen.dart';
-import 'package:sbercloud_flutter/ui/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,13 +30,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (isAndroid(context)) {
-      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          systemNavigationBarColor: Colors.black38));
-    }
-
     return App();
   }
 }
@@ -56,17 +48,19 @@ class _AppState extends State<App> {
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primaryColor: Colors.white,
       accentColor: Color(0xFF07E897),
+        scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+      canvasColor: const Color(0xFFFFFFFF),
       fontFamily: "SB Sans Display"
     );
     final materialDarkTheme = new ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity);
     final cupertinoTheme = new CupertinoThemeData(
       brightness: brightness, // if null will use the system theme
       primaryColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.blue,
-        darkColor: Colors.blue,
+        color: Colors.green,
+        darkColor: Colors.green,
       ),
     );
 

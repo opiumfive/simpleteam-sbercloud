@@ -38,6 +38,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
+  String _selectedPeriod = "1 day";
+
   int _currentIndex = 0;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
@@ -148,14 +150,48 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         break;
     }
 
+    final List<DropdownMenuItem<String>> periods = <String>[
+      '1 day', '2 days', '3 days'
+    ].map((e) => DropdownMenuItem(value: e, child: Text(
+      e,
+      style: TextStyle(
+          color: Color(0xA3000000),
+          fontSize: 13,
+          fontWeight: FontWeight.bold),
+    ),)).toList();
+
+
+    var periodWidget = DropdownButton(
+        style: TextStyle(color: Color(0xB3343F48), fontSize: 11.0, fontWeight: FontWeight.w600),
+        value: _selectedPeriod,
+        underline: Container(),
+        items: periods,
+        icon: SberIcon(SberIcon.Dropdown),
+        iconSize: 16.0,
+        onChanged: (String newValue) {
+      setState(() {
+        _selectedPeriod = newValue;
+      });
+    });
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          elevation: 0.0,
           title: Padding(
             padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
             child: title,
           ),
           actions: actions,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(30),
+            child: Container(
+              height: 32.0,
+              padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 8.0),
+              alignment: Alignment.centerLeft,
+              child: periodWidget,
+            ),
+          ),
         ),
         body: PageTransitionSwitcher(
           child: case2(
@@ -276,13 +312,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                                   width: 100,
                                   height: 100,
                                   padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Card(
-                                    shadowColor:
-                                        Color(0xFF000000).withOpacity(0.5),
-                                    elevation: 13,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
+                                  child: CardWidget(
                                     child: indexHor < resources.length ? Stack(
                                       alignment: AlignmentDirectional.center,
                                       children: [

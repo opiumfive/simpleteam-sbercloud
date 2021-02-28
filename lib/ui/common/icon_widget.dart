@@ -23,6 +23,7 @@ class SberIcon extends StatelessWidget {
   static const Close12dp = "ic_close_12dp.svg";
   static const Close16dp = "ic_close_16dp.svg";
   static const Plus40dp = "ic_plus_40dp.svg";
+  static const Dropdown = "ic_dropdown.svg";
 
   //Profile
   static const Profile = "ic_profile.svg";
