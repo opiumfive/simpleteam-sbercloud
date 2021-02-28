@@ -86,6 +86,7 @@ class _ChartViewState extends State<ChartView> {
             ];
 
           result.add(ChartDataSeries(
+              dimensions: widget.metrics[i].dimensions,
               data: data,
               title: widget.metrics[i].getHumanTitle(),
               unit: widget.metrics[i].unit));
@@ -201,6 +202,7 @@ class _ChartViewState extends State<ChartView> {
               zoomPanBehavior: _zoomingBehavior,
               backgroundColor: Colors.transparent,
               plotAreaBackgroundColor: Colors.transparent,
+              legend: Legend(height: "100%", toggleSeriesVisibility: true, isVisible: widget.axisVisible, position: LegendPosition.bottom),
               primaryYAxis: NumericAxis(
                 isVisible: widget.axisVisible,
                 enableAutoIntervalOnZooming: true,
@@ -259,7 +261,7 @@ class _ChartViewState extends State<ChartView> {
                   dataSource: e.data,
                   xValueMapper: (ChartSampleData sales, _) => sales.x,
                   yValueMapper: (ChartSampleData sales, _) => sales.yValue + (widget.axisVisible ? 0 : 1000000),
-                  name: e.title,
+                  name: e.dimensions.first.value.length > 15 ? e.dimensions.first.value.substring(0, 14) + ".." : e.dimensions.first.value,
                 ))
         .toList();
     return result;

@@ -24,6 +24,10 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
 
+  String _selectedPeriod = "1 day";
+  String _selectedInterval = "1 hour";
+  String _selectedType = "average";
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +39,36 @@ class _DetailScreenState extends State<DetailScreen> {
     List<Metric> metrics = ModalRoute.of(context).settings.arguments;
     CloudEyeUsecase cloudEyeUsecase = Provider.of<CloudEyeUsecase>(context);
     MainProvider mainProvider = Provider.of<MainProvider>(context);
+
+    final List<DropdownMenuItem<String>> intervals = <String>[
+      '1 hour', '2 hours', '3 hours'
+    ].map((e) => DropdownMenuItem(value: e, child: Text(
+      e,
+      style: TextStyle(
+          color: Color(0xA3000000),
+          fontSize: 13,
+          fontWeight: FontWeight.bold),
+    ),)).toList();
+
+    final List<DropdownMenuItem<String>> types = <String>[
+      'average', 'min', 'max', 'sum', 'variance'
+    ].map((e) => DropdownMenuItem(value: e, child: Text(
+      e,
+      style: TextStyle(
+          color: Color(0xA3000000),
+          fontSize: 13,
+          fontWeight: FontWeight.bold),
+    ),)).toList();
+
+    final List<DropdownMenuItem<String>> periods = <String>[
+      '1 day', '2 days', '3 days'
+    ].map((e) => DropdownMenuItem(value: e, child: Text(
+      e,
+      style: TextStyle(
+          color: Color(0xA3000000),
+          fontSize: 13,
+          fontWeight: FontWeight.bold),
+    ),)).toList();
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -49,6 +83,54 @@ class _DetailScreenState extends State<DetailScreen> {
       padding: const EdgeInsets.fromLTRB(0, 32.0, 0.0, 16.0),
       child: Column(
         children: [
+          Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4), child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+
+            children: [
+              Text(
+                'Type',
+                style: TextStyle(
+                    color: Color(0xFF343F48).withOpacity(0.37),
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 5,),
+              DropdownButton(value: _selectedType, items: types, onChanged: (String newValue) {
+                setState(() {
+                  _selectedType = newValue;
+                });
+              }),
+              SizedBox(width: 10,),
+              Text(
+                'Interval',
+                style: TextStyle(
+                    color: Color(0xFF343F48).withOpacity(0.37),
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 5,),
+              DropdownButton(value: _selectedInterval, items: intervals, onChanged: (String newValue) {
+                setState(() {
+                  _selectedInterval = newValue;
+                });
+              }),
+              SizedBox(width: 10,),
+              Text(
+                'Period',
+                style: TextStyle(
+                    color: Color(0xFF343F48).withOpacity(0.37),
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 5,),
+              DropdownButton(value: _selectedPeriod, items: periods, onChanged: (String newValue) {
+                setState(() {
+                  _selectedPeriod = newValue;
+                });
+              })
+
+            ],
+          ),),
           Container(
             padding: const EdgeInsets.all(2.0),
             child: ChartView(

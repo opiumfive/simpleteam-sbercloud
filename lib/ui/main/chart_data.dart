@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sbercloud_flutter/models/cloud_eye_models.dart';
 
 class ChartSampleData {
 
@@ -12,11 +13,12 @@ class ChartSampleData {
 
 class ChartDataSeries {
 
-  ChartDataSeries({this.data, this.title, this.unit});
+  ChartDataSeries({this.data, this.title, this.unit, this.dimensions});
 
   final List<ChartSampleData> data;
   final String title;
   final String unit;
+  final List<Dimension> dimensions;
 }
 
 class Special {
