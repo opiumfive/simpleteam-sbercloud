@@ -123,6 +123,9 @@ class Metric {
   String metric_name;
   List<Dimension> dimensions;
 
+  String namespaceAndMetricName() {
+    return namespace + "_" + metric_name;
+  }
 
   @override
   bool operator ==(Object other) =>

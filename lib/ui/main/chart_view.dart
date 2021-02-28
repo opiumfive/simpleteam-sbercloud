@@ -22,13 +22,20 @@ class ChartView extends StatefulWidget {
   bool axisVisible = true;
   bool gesturesControl = true;
 
+  DateTimeRange dateTimeRange;
+  int interval;
+  String type;
+
   ChartView(
       {Key key,
       this.metrics,
       this.mainProvider,
       this.cloudEyeUsecase,
       this.axisVisible,
-      this.gesturesControl})
+      this.gesturesControl,
+      this.dateTimeRange,
+      this.interval,
+      this.type})
       : super(key: key);
 
   @override
@@ -49,6 +56,9 @@ class _ChartViewState extends State<ChartView> {
 
   @override
   void initState() {
+    if (widget.dateTimeRange == null) widget.dateTimeRange = widget.mainProvider.range;
+    if (widget.interval == null) widget.interval = widget.mainProvider.interval;
+    if (widget.type == null) widget.type = "average";
     super.initState();
   }
 
@@ -68,9 +78,9 @@ class _ChartViewState extends State<ChartView> {
 
       for (int i = 0; i < widget.metrics.length; i++) {
         BaseModel<List<Datapoint>> resp = await widget.cloudEyeUsecase
-            .metricData(widget.metrics[i], widget.mainProvider.range,
-                widget.mainProvider.interval,
-                filter: "average");
+            .metricData(widget.metrics[i], widget.dateTimeRange,
+                widget.interval,
+                filter: widget.type);
         if (resp != null && resp.data != null && resp.data.isNotEmpty) {
           List<ChartSampleData> data = resp.data
               .map<ChartSampleData>((e) => ChartSampleData(
@@ -92,13 +102,14 @@ class _ChartViewState extends State<ChartView> {
               unit: widget.metrics[i].unit));
         }
       }
-
-      widget.mainProvider.chartDataCache[key] = result;
+      if (!widget.axisVisible) {
+        widget.mainProvider.chartDataCache[key] = result;
+      }
 
       return result;
     }
 
-    if (widget.mainProvider.chartDataCache.containsKey(key)) {
+    if (widget.mainProvider.chartDataCache.containsKey(key) && !widget.axisVisible) {
       widget.chartData = widget.mainProvider.chartDataCache[key];
       return _mainWidget();
     }
@@ -187,12 +198,13 @@ class _ChartViewState extends State<ChartView> {
                 1.0
               ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
             ),
-            height: widget.axisVisible? null : 90,
+            height: widget.axisVisible? 400 : 90,
             child: widget.chartData.length > 0 ? SfCartesianChart(
               plotAreaBorderWidth: 0,
               //title: ChartTitle(text: widget.chartData.first.title),
               primaryXAxis: DateTimeAxis(
                   isVisible: widget.axisVisible,
+                  intervalType: widget.dateTimeRange.duration.inHours > 24 ? DateTimeIntervalType.days : DateTimeIntervalType.hours,
                   enableAutoIntervalOnZooming: true,
                   majorGridLines: MajorGridLines(width: 0)),
               tooltipBehavior:
@@ -255,14 +267,21 @@ class _ChartViewState extends State<ChartView> {
     int colorIndex = 0;
     List<ChartSeries<ChartSampleData, DateTime>> result = chartData
         .map<ChartSeries<ChartSampleData, DateTime>>(
-            (e) => SplineSeries<ChartSampleData, DateTime>(
+            (e) => widget.axisVisible ? LineSeries<ChartSampleData, DateTime>(
                   color: colors[colorIndex++ % colors.length],
                   width: 3,
                   dataSource: e.data,
                   xValueMapper: (ChartSampleData sales, _) => sales.x,
                   yValueMapper: (ChartSampleData sales, _) => sales.yValue + (widget.axisVisible ? 0 : 1000000),
                   name: e.dimensions.first.value.length > 15 ? e.dimensions.first.value.substring(0, 14) + ".." : e.dimensions.first.value,
-                ))
+                ) : SplineSeries<ChartSampleData, DateTime>(
+              color: colors[colorIndex++ % colors.length],
+              width: 3,
+              dataSource: e.data,
+              xValueMapper: (ChartSampleData sales, _) => sales.x,
+              yValueMapper: (ChartSampleData sales, _) => sales.yValue + (widget.axisVisible ? 0 : 1000000),
+              name: e.dimensions.first.value.length > 15 ? e.dimensions.first.value.substring(0, 14) + ".." : e.dimensions.first.value,
+            ))
         .toList();
     return result;
   }

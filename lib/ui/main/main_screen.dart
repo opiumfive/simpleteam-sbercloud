@@ -247,7 +247,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               return SizedBox(
                 height: MediaQuery.of(context).size.height / 1.3,
                 child: Center(
-                  child: PlatformCircularProgressIndicator(),
+                  child: ShimmerList(),
                 ),
               );
             default:
