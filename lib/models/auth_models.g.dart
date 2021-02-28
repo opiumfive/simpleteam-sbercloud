@@ -155,10 +155,11 @@ Map<String, dynamic> _$IdentityToJson(Identity instance) => <String, dynamic>{
     };
 
 Password _$PasswordFromJson(Map<String, dynamic> json) {
-  return Password()
-    ..user = json['user'] == null
+  return Password(
+    json['user'] == null
         ? null
-        : UserCreds.fromJson(json['user'] as Map<String, dynamic>);
+        : UserCreds.fromJson(json['user'] as Map<String, dynamic>),
+  );
 }
 
 Map<String, dynamic> _$PasswordToJson(Password instance) => <String, dynamic>{
@@ -169,9 +170,10 @@ UserCreds _$UserCredsFromJson(Map<String, dynamic> json) {
   return UserCreds(
     json['name'] as String,
     json['password'] as String,
-  )..domain = json['domain'] == null
-      ? null
-      : Domain.fromJson(json['domain'] as Map<String, dynamic>);
+    json['domain'] == null
+        ? null
+        : Domain.fromJson(json['domain'] as Map<String, dynamic>),
+  );
 }
 
 Map<String, dynamic> _$UserCredsToJson(UserCreds instance) => <String, dynamic>{
@@ -181,9 +183,9 @@ Map<String, dynamic> _$UserCredsToJson(UserCreds instance) => <String, dynamic>{
     };
 
 Domain _$DomainFromJson(Map<String, dynamic> json) {
-  return Domain()
-    ..name = json['name'] as String
-    ..id = json['id'] as String;
+  return Domain(
+    json['name'] as String,
+  )..id = json['id'] as String;
 }
 
 Map<String, dynamic> _$DomainToJson(Domain instance) {
@@ -202,10 +204,11 @@ Map<String, dynamic> _$DomainToJson(Domain instance) {
 }
 
 Scope _$ScopeFromJson(Map<String, dynamic> json) {
-  return Scope()
-    ..project = json['project'] == null
+  return Scope(
+    json['project'] == null
         ? null
-        : Project.fromJson(json['project'] as Map<String, dynamic>);
+        : Project.fromJson(json['project'] as Map<String, dynamic>),
+  );
 }
 
 Map<String, dynamic> _$ScopeToJson(Scope instance) => <String, dynamic>{
@@ -213,7 +216,9 @@ Map<String, dynamic> _$ScopeToJson(Scope instance) => <String, dynamic>{
     };
 
 Project _$ProjectFromJson(Map<String, dynamic> json) {
-  return Project()..name = json['name'] as String;
+  return Project(
+    json['name'] as String,
+  );
 }
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
