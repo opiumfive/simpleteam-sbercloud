@@ -13,7 +13,9 @@ flutter run --release
 ### Архитектура
 ``Change Notifier`` + ``Provider``  - Uses the ``ChangeNotifier`` class from Flutter with provider package now recommended by the Flutter team.
 
-[Зависимости](pubspec.yaml) - зависимости
+
+[Зависимости](pubspec.yaml) - зависимости <br>
+[Исходный код](lib) - дарт, flutter
 
 ### Данные 
 [Реализация API](lib/api) - авторизация, получения данных проекта, пользователя, метрики, квоты, алармы
