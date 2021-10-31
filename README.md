@@ -1,6 +1,14 @@
 # SberCode
 Приложение SberCloud Monitor
 
+
+
+
+https://user-images.githubusercontent.com/9281221/139576471-b85eae0f-a7eb-44a9-8454-236b81c652ca.mp4
+
+
+
+
 ```bash
 #команда для билда релизной апк 
 flutter build apk --split-per-abi
